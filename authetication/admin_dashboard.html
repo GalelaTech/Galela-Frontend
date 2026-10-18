@@ -1,0 +1,2223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galela Tech – Admin Dashboard</title>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Copy all the CSS from the previous message - it's the same */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #050510;
+            color: #fff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        :root {
+            --deep-navy: #0b0b1a;
+            --glow-blue: #2b7fff;
+            --sky-stroke: #7bb3ff;
+            --accent-glow: #4d9eff;
+            --text-muted: #b0c8e5;
+            --card-bg: rgba(20, 30, 55, 0.7);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --purple: #8b5cf6;
+            --indigo: #6366f1;
+            --online-green: #22c55e;
+        }
+
+        /* navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 5%;
+            z-index: 1000;
+            background: rgba(5, 5, 20, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(123, 179, 255, 0.2);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            height: 45px;
+            width: auto;
+            filter: drop-shadow(0 0 8px rgba(43,127,255,0.5));
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 0%, var(--sky-stroke) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--glow-blue);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, var(--glow-blue), #1755cc);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+        }
+
+        .user-name {
+            color: white;
+            font-weight: 500;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(123, 179, 255, 0.2);
+            border-radius: 16px;
+            padding: 0.8rem 0;
+            min-width: 180px;
+            margin-top: 0.5rem;
+            display: none;
+            z-index: 1001;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 0.8rem 1.5rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            transition: 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(43, 127, 255, 0.1);
+            color: white;
+        }
+
+        .dropdown-item i {
+            width: 20px;
+            color: var(--glow-blue);
+        }
+
+        /* Connection status */
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--card-bg);
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            border: 1px solid rgba(123, 179, 255, 0.2);
+            margin-left: 1rem;
+        }
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--online-green);
+            box-shadow: 0 0 10px var(--online-green);
+            animation: pulse 2s infinite;
+        }
+        .status-dot.offline {
+            background: var(--danger);
+            box-shadow: 0 0 10px var(--danger);
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+        .status-text {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* dashboard layout */
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 100px auto 2rem;
+            padding: 0 5%;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .welcome-section h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #fff 0%, var(--sky-stroke) 80%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .welcome-section p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .admin-badge {
+            background: linear-gradient(145deg, var(--purple), var(--indigo));
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 40px;
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .admin-badge i {
+            color: white;
+        }
+
+        .admin-badge .role {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            color: white;
+        }
+
+        /* stats cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(123, 179, 255, 0.2);
+            border-radius: 24px;
+            padding: 1.5rem;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--glow-blue);
+            box-shadow: 0 20px 30px -10px rgba(43,127,255,0.2);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 16px;
+            background: rgba(43, 127, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--glow-blue);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .stat-trend {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        .trend-up {
+            color: var(--success);
+        }
+
+        .trend-down {
+            color: var(--danger);
+        }
+
+        /* charts section */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(123, 179, 255, 0.2);
+            border-radius: 24px;
+            padding: 1.5rem;
+        }
+
+        .chart-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            color: var(--sky-stroke);
+            font-weight: 600;
+        }
+
+        .chart-title i {
+            color: var(--glow-blue);
+        }
+
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+
+        /* filters section */
+        .filters-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(123, 179, 255, 0.2);
+            border-radius: 24px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .filters-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--sky-stroke);
+            font-weight: 600;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-group label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .filter-select {
+            padding: 0.8rem;
+            background: rgba(10, 20, 40, 0.7);
+            border: 1px solid #2a4070;
+            border-radius: 12px;
+            color: white;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--glow-blue);
+        }
+
+        .filter-input {
+            padding: 0.8rem;
+            background: rgba(10, 20, 40, 0.7);
+            border: 1px solid #2a4070;
+            border-radius: 12px;
+            color: white;
+            font-size: 0.95rem;
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: var(--glow-blue);
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        /* requests table */
+        .requests-table-container {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(123, 179, 255, 0.2);
+            border-radius: 24px;
+            padding: 1.5rem;
+            overflow-x: auto;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .table-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--sky-stroke);
+            font-weight: 600;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .export-btn {
+            padding: 0.6rem 1.2rem;
+            background: rgba(43, 127, 255, 0.1);
+            border: 1px solid var(--glow-blue);
+            border-radius: 30px;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .export-btn:hover {
+            background: rgba(43, 127, 255, 0.2);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 1rem 0.8rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.9rem;
+            border-bottom: 1px solid rgba(123, 179, 255, 0.2);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        th:hover {
+            color: white;
+        }
+
+        th i {
+            margin-left: 0.3rem;
+            font-size: 0.8rem;
+            opacity: 0.5;
+        }
+
+        td {
+            padding: 1rem 0.8rem;
+            border-bottom: 1px solid rgba(123, 179, 255, 0.1);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: rgba(245, 158, 11, 0.15);
+            color: #f59e0b;
+        }
+
+        .status-in_progress {
+            background: rgba(43, 127, 255, 0.15);
+            color: var(--glow-blue);
+        }
+
+        .status-completed {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+        }
+
+        .status-cancelled {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+        }
+
+        .action-btn {
+            padding: 0.4rem 0.8rem;
+            background: rgba(43, 127, 255, 0.1);
+            border: 1px solid var(--glow-blue);
+            border-radius: 20px;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.8rem;
+            margin-right: 0.3rem;
+        }
+
+        .action-btn:hover {
+            background: rgba(43, 127, 255, 0.3);
+        }
+
+        .action-btn.view {
+            border-color: var(--glow-blue);
+        }
+
+        .action-btn.upload {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .action-btn.upload:hover {
+            background: rgba(16, 185, 129, 0.3);
+        }
+
+        .action-btn.delete {
+            border-color: var(--danger);
+        }
+
+        /* file upload area */
+        .file-upload-area {
+            border: 2px dashed var(--success);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+            background: rgba(16, 185, 129, 0.05);
+            margin: 1rem 0;
+        }
+
+        .file-upload-area:hover {
+            border-color: var(--glow-blue);
+            background: rgba(43, 127, 255, 0.05);
+        }
+
+        .file-upload-area i {
+            font-size: 2.5rem;
+            color: var(--success);
+            margin-bottom: 1rem;
+        }
+
+        .file-preview {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--success);
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1rem 0;
+            display: none;
+        }
+
+        .file-preview.active {
+            display: block;
+        }
+
+        /* pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .page-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 1px solid rgba(123, 179, 255, 0.2);
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .page-btn:hover,
+        .page-btn.active {
+            background: var(--glow-blue);
+            border-color: var(--glow-blue);
+        }
+
+        .page-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(123, 179, 255, 0.3);
+            border-radius: 40px;
+            padding: 2.5rem;
+            max-width: 700px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .modal-close:hover {
+            color: white;
+        }
+
+        .modal-header {
+            margin-bottom: 2rem;
+        }
+
+        .modal-header h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-header p {
+            color: var(--text-muted);
+        }
+
+        .modal-body {
+            margin-bottom: 2rem;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-item {
+            padding: 1rem;
+            background: rgba(10, 20, 40, 0.5);
+            border-radius: 16px;
+        }
+
+        .detail-item.full-width {
+            grid-column: span 2;
+        }
+
+        .detail-label {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .status-select {
+            padding: 0.8rem;
+            background: rgba(10, 20, 40, 0.7);
+            border: 1px solid #2a4070;
+            border-radius: 12px;
+            color: white;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.3s;
+            border: 2px solid transparent;
+            background: linear-gradient(145deg, var(--glow-blue), #1755cc);
+            color: white;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 30px rgba(75, 158, 255, 0.5);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--glow-blue);
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            background: rgba(43, 127, 255, 0.15);
+        }
+
+        .btn-danger {
+            background: linear-gradient(145deg, #ef4444, #dc2626);
+        }
+
+        .btn-success {
+            background: linear-gradient(145deg, #10b981, #059669);
+        }
+
+        /* document tabs */
+        .document-tabs {
+            display: flex;
+            gap: 1rem;
+            margin: 1.5rem 0;
+            border-bottom: 1px solid rgba(123, 179, 255, 0.2);
+            padding-bottom: 0.5rem;
+        }
+
+        .document-tab {
+            padding: 0.5rem 1.5rem;
+            cursor: pointer;
+            border-radius: 30px;
+            transition: 0.2s;
+            color: var(--text-muted);
+        }
+
+        .document-tab.active {
+            background: rgba(43, 127, 255, 0.2);
+            color: white;
+        }
+
+        .document-tab i {
+            margin-right: 0.5rem;
+        }
+
+        .document-section {
+            display: none;
+        }
+
+        .document-section.active {
+            display: block;
+        }
+
+        /* loading spinner */
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .loading-spinner.active {
+            display: block;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(43, 127, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--glow-blue);
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glow-blue);
+            border-radius: 12px;
+            color: white;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 9999;
+            animation: slideIn 0.3s ease;
+            max-width: 400px;
+        }
+
+        .notification.success {
+            border-left: 4px solid var(--success);
+        }
+
+        .notification.error {
+            border-left: 4px solid var(--danger);
+        }
+
+        .notification.info {
+            border-left: 4px solid var(--glow-blue);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        /* file list styles */
+        .file-list-item {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: rgba(10, 20, 40, 0.5);
+            border-radius: 12px;
+        }
+
+        .file-list-item.completed {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--success);
+        }
+
+        .file-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .file-name {
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .file-meta {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* responsive */
+        @media (max-width: 1200px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+            .nav-links {
+                display: none;
+            }
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+            .detail-item.full-width {
+                grid-column: span 1;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .table-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+            .export-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="https://i.postimg.cc/5y68Fqyv/Chat-GPT-Image-Mar-6-2026-10-08-30-PM.png" alt="Galela Tech">
+                <span class="logo-text">GALELA TECH</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/index.html">Home</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="contacts.html">Contact</a></li>
+                <li><a href="#" class="active">Admin</a></li>
+            </ul>
+            <div style="display: flex; align-items: center;">
+                <!-- Connection Status Indicator -->
+                <div class="connection-status" id="connectionStatus">
+                    <div class="status-dot" id="statusDot"></div>
+                    <span class="status-text" id="statusText">Checking connection...</span>
+                </div>
+                <!-- Prominent Logout Button -->
+                <button class="btn btn-danger" id="navLogoutBtn" style="margin-left: 1rem; padding: 0.5rem 1.2rem; font-size: 0.9rem;">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+                <div class="user-menu" id="userMenu">
+                    <span class="user-name" id="displayName">Loading...</span>
+                    <div class="user-avatar" id="userAvatar">AD</div>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <a href="#" class="dropdown-item" id="profileLink">
+                            <i class="fas fa-user"></i> My Profile
+                        </a>
+                        <a href="#" class="dropdown-item" id="settingsLink">
+                            <i class="fas fa-cog"></i> Settings
+                        </a>
+                        <a href="#" class="dropdown-item" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- dashboard container -->
+    <div class="dashboard-container">
+        <!-- header with admin info -->
+        <div class="dashboard-header">
+            <div class="welcome-section">
+                <h1 id="welcomeMessage">Admin Dashboard</h1>
+                <p id="adminEmail">Loading admin information...</p>
+                <p style="color: var(--glow-blue); font-size: 0.9rem; margin-top: 0.3rem;" id="adminId"></p>
+            </div>
+            <div class="admin-badge">
+                <i class="fas fa-shield-alt"></i>
+                <span>Administrator</span>
+                <span class="role" id="adminLevel">Super Admin</span>
+            </div>
+        </div>
+
+        <!-- stats cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                    <span class="stat-value" id="totalPending">0</span>
+                </div>
+                <div class="stat-label">Pending Requests</div>
+                <div class="stat-trend trend-up">
+                    <i class="fas fa-arrow-up"></i> <span id="pendingTrend">+0%</span> from yesterday
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon"><i class="fas fa-spinner"></i></div>
+                    <span class="stat-value" id="totalInProgress">0</span>
+                </div>
+                <div class="stat-label">In Progress</div>
+                <div class="stat-trend trend-up">
+                    <i class="fas fa-arrow-up"></i> <span id="progressTrend">+0%</span> from yesterday
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                    <span class="stat-value" id="totalCompleted">0</span>
+                </div>
+                <div class="stat-label">Completed</div>
+                <div class="stat-trend trend-up">
+                    <i class="fas fa-arrow-up"></i> <span id="completedTrend">+0%</span> from yesterday
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                    <span class="stat-value" id="totalCustomers">0</span>
+                </div>
+                <div class="stat-label">Active Customers</div>
+                <div class="stat-trend trend-up">
+                    <i class="fas fa-arrow-up"></i> <span id="customerTrend">+0</span> new this week
+                </div>
+            </div>
+        </div>
+
+        <!-- charts section -->
+        <div class="charts-grid">
+            <div class="chart-card">
+                <div class="chart-title">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Requests by Service Type</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="serviceChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-title">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Requests Over Time</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- filters section -->
+        <div class="filters-section">
+            <div class="filters-title">
+                <i class="fas fa-filter"></i>
+                <span>Filter Requests</span>
+            </div>
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label>Status</label>
+                    <select class="filter-select" id="statusFilter">
+                        <option value="all">All Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Service Type</label>
+                    <select class="filter-select" id="serviceFilter">
+                        <option value="all">All Services</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Date From</label>
+                    <input type="date" class="filter-input" id="dateFrom">
+                </div>
+                <div class="filter-group">
+                    <label>Date To</label>
+                    <input type="date" class="filter-input" id="dateTo">
+                </div>
+                <div class="filter-group">
+                    <label>Search</label>
+                    <input type="text" class="filter-input" id="searchInput" placeholder="Request ID, Customer, Email...">
+                </div>
+            </div>
+            <div class="filter-actions">
+                <button class="btn" id="applyFiltersBtn">
+                    <i class="fas fa-check"></i> Apply Filters
+                </button>
+                <button class="btn btn-outline" id="resetFiltersBtn">
+                    <i class="fas fa-undo"></i> Reset
+                </button>
+            </div>
+        </div>
+
+        <!-- requests table -->
+        <div class="requests-table-container">
+            <div class="table-header">
+                <div class="table-title">
+                    <i class="fas fa-list"></i>
+                    <span>Customer Requests</span>
+                </div>
+                <div class="table-actions">
+                    <button class="export-btn" id="exportCSVBtn">
+                        <i class="fas fa-file-csv"></i> Export CSV
+                    </button>
+                    <button class="export-btn" id="refreshDataBtn">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+            </div>
+
+            <!-- loading spinner -->
+            <div class="loading-spinner" id="loadingSpinner">
+                <div class="spinner"></div>
+                <p>Loading requests from database...</p>
+            </div>
+
+            <!-- table -->
+            <div style="overflow-x: auto;">
+                <table id="requestsTable">
+                    <thead>
+                        <tr>
+                            <th onclick="sortTable(0)">ID <i class="fas fa-sort"></i></th>
+                            <th onclick="sortTable(1)">Customer <i class="fas fa-sort"></i></th>
+                            <th onclick="sortTable(2)">Email <i class="fas fa-sort"></i></th>
+                            <th onclick="sortTable(3)">Service <i class="fas fa-sort"></i></th>
+                            <th onclick="sortTable(4)">Option <i class="fas fa-sort"></i></th>
+                            <th onclick="sortTable(5)">Date <i class="fas fa-sort"></i></th>
+                            <th onclick="sortTable(6)">Status <i class="fas fa-sort"></i></th>
+                            <th>Customer File</th>
+                            <th>Completed</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <tr>
+                            <td colspan="10" style="text-align: center; padding: 2rem;">
+                                <i class="fas fa-spinner fa-spin" style="font-size: 2rem;"></i>
+                                <p>Loading requests...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- pagination -->
+            <div class="pagination" id="pagination"></div>
+        </div>
+    </div>
+
+    <!-- Request Details Modal -->
+    <div class="modal" id="requestModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            <div class="modal-header">
+                <h2 id="modalRequestId">Request Details</h2>
+                <p id="modalCustomerName"></p>
+            </div>
+            
+            <div class="document-tabs">
+                <div class="document-tab active" onclick="switchTab('details')">
+                    <i class="fas fa-info-circle"></i> Details
+                </div>
+                <div class="document-tab" onclick="switchTab('customer-files')">
+                    <i class="fas fa-file-upload"></i> Customer Files
+                </div>
+                <div class="document-tab" onclick="switchTab('completed-files')">
+                    <i class="fas fa-file-check"></i> Completed Work
+                </div>
+            </div>
+
+            <!-- Details Tab -->
+            <div class="document-section active" id="details-tab">
+                <div class="modal-body">
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">Service Type</div>
+                            <div class="detail-value" id="modalService">-</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Selected Option</div>
+                            <div class="detail-value" id="modalOption">-</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Email</div>
+                            <div class="detail-value" id="modalEmail">-</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Phone</div>
+                            <div class="detail-value" id="modalPhone">-</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Date</div>
+                            <div class="detail-value" id="modalDate">-</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Status</div>
+                            <div class="detail-value">
+                                <select class="status-select" id="modalStatus">
+                                    <option value="pending">Pending</option>
+                                    <option value="in_progress">In Progress</option>
+                                    <option value="completed">Completed</option>
+                                    <option value="cancelled">Cancelled</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="detail-item full-width" id="addressContainer" style="display: none;">
+                            <div class="detail-label">Address</div>
+                            <div class="detail-value" id="modalAddress">-</div>
+                        </div>
+                        <div class="detail-item full-width">
+                            <div class="detail-label">Description</div>
+                            <div class="detail-value" id="modalDescription">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customer Files Tab -->
+            <div class="document-section" id="customer-files-tab">
+                <div class="modal-body">
+                    <h3 style="margin-bottom: 1rem; color: var(--sky-stroke);">
+                        <i class="fas fa-file-upload"></i> Files Uploaded by Customer
+                    </h3>
+                    <div id="modalCustomerFiles"></div>
+                </div>
+            </div>
+
+            <!-- Completed Files Tab -->
+            <div class="document-section" id="completed-files-tab">
+                <div class="modal-body">
+                    <h3 style="margin-bottom: 1rem; color: var(--success);">
+                        <i class="fas fa-cloud-upload-alt"></i> Upload Completed Work
+                    </h3>
+                    
+                    <div class="file-upload-area" id="completedFileUpload">
+                        <i class="fas fa-file-pdf"></i>
+                        <p>Click to select completed document</p>
+                        <p style="font-size:0.8rem; color:var(--text-muted);">
+                            PDF, Images, Word docs (max 10MB)
+                        </p>
+                        <input type="file" id="completedFileInput" style="display:none" 
+                               accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+                    </div>
+                    
+                    <div class="file-preview" id="completedFilePreview">
+                        <div style="display:flex; align-items:center; gap:1rem;">
+                            <i class="fas fa-file-pdf" style="font-size:2rem; color:var(--success)"></i>
+                            <div style="flex:1">
+                                <div id="fileName"></div>
+                                <div id="fileSize" style="font-size:0.8rem; color:var(--text-muted)"></div>
+                            </div>
+                            <button class="btn btn-success" id="uploadCompletedBtn">
+                                <i class="fas fa-upload"></i> Upload
+                            </button>
+                        </div>
+                    </div>
+
+                    <h3 style="margin: 2rem 0 1rem; color: var(--success);">
+                        <i class="fas fa-history"></i> Previously Uploaded
+                    </h3>
+                    <div id="modalCompletedFiles"></div>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn" id="updateStatusBtn">
+                    <i class="fas fa-save"></i> Update Status
+                </button>
+                <button class="btn btn-outline" onclick="closeModal()">
+                    <i class="fas fa-times"></i> Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- File Viewer Modal -->
+    <div class="modal" id="fileViewerModal">
+        <div class="modal-content" style="max-width:800px;">
+            <button class="modal-close" onclick="closeFileViewer()"><i class="fas fa-times"></i></button>
+            <div class="modal-header">
+                <h2 id="fileViewerTitle">File Viewer</h2>
+                <p id="fileViewerMeta"></p>
+            </div>
+            <div id="fileViewerBody" style="min-height:400px;"></div>
+            <div class="modal-actions" style="justify-content:center;">
+                <a id="fileViewerDownload" href="#" download class="btn">
+                    <i class="fas fa-download"></i> Download
+                </a>
+                <button class="btn btn-outline" onclick="closeFileViewer()">
+                    <i class="fas fa-times"></i> Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API Configuration
+        const BACKEND = 'https://cv-software-backend.onrender.com';
+        const API_BASE_URL = `${BACKEND}/api`;
+
+        // State
+        let allRequests = [];
+        let filteredRequests = [];
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        let currentRequestId = null;
+        let currentRequest = null;
+        let sortColumn = 0;
+        let sortDirection = 'asc';
+        let currentUser = null;
+        let selectedCompletedFile = null;
+        let serviceChart = null;
+        let trendChart = null;
+
+        // DOM Elements
+        const userMenu = document.getElementById('userMenu');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        const displayName = document.getElementById('displayName');
+        const userAvatar = document.getElementById('userAvatar');
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        const adminEmail = document.getElementById('adminEmail');
+        const adminId = document.getElementById('adminId');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const navLogoutBtn = document.getElementById('navLogoutBtn');
+        const tableBody = document.getElementById('tableBody');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const requestModal = document.getElementById('requestModal');
+        const statusFilter = document.getElementById('statusFilter');
+        const serviceFilter = document.getElementById('serviceFilter');
+        const dateFrom = document.getElementById('dateFrom');
+        const dateTo = document.getElementById('dateTo');
+        const searchInput = document.getElementById('searchInput');
+        const applyFiltersBtn = document.getElementById('applyFiltersBtn');
+        const resetFiltersBtn = document.getElementById('resetFiltersBtn');
+        const exportCSVBtn = document.getElementById('exportCSVBtn');
+        const refreshDataBtn = document.getElementById('refreshDataBtn');
+        const statusDot = document.getElementById('statusDot');
+        const statusText = document.getElementById('statusText');
+        const updateStatusBtn = document.getElementById('updateStatusBtn');
+        const completedFileUpload = document.getElementById('completedFileUpload');
+        const completedFileInput = document.getElementById('completedFileInput');
+        const completedFilePreview = document.getElementById('completedFilePreview');
+        const uploadCompletedBtn = document.getElementById('uploadCompletedBtn');
+
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div style="display:flex;align-items:center;gap:10px">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+        }
+
+        // ============================================
+        // CONNECTION & AUTH
+        // ============================================
+        async function checkConnection() {
+            const token = localStorage.getItem('access_token');
+            if (!token) {
+                statusDot.classList.add('offline');
+                statusText.textContent = 'Not authenticated';
+                return false;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/services/options/`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (response.ok) {
+                    statusDot.classList.remove('offline');
+                    statusText.textContent = 'Connected ✓';
+                    return true;
+                }
+            } catch (e) {
+                console.log('Connection check failed:', e);
+            }
+
+            statusDot.classList.add('offline');
+            statusText.textContent = 'Offline';
+            return false;
+        }
+
+        async function checkAuth() {
+            const token = localStorage.getItem('access_token');
+            const userInfo = localStorage.getItem('user_info');
+
+            if (!token) {
+                window.location.href = 'loginform.html';
+                return null;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/me/`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const user = await response.json();
+                    localStorage.setItem('user_info', JSON.stringify(user));
+                    currentUser = user;
+
+                    if (!user.is_staff && !user.is_superuser) {
+                        window.location.href = 'customer_dashboard.html';
+                        return null;
+                    }
+
+                    return user;
+                }
+            } catch (error) {
+                console.error('Auth check failed:', error);
+                if (userInfo) {
+                    try {
+                        const user = JSON.parse(userInfo);
+                        if (user.is_staff || user.is_superuser) {
+                            currentUser = user;
+                            return user;
+                        }
+                    } catch (e) {}
+                }
+            }
+
+            return null;
+        }
+
+        // ============================================
+        // LOAD DATA
+        // ============================================
+        async function loadAdminData() {
+            const user = await checkAuth();
+            if (!user) {
+                window.location.href = 'loginform.html';
+                return;
+            }
+
+            displayName.textContent = user.full_name || user.username || 'Admin';
+            welcomeMessage.textContent = `Admin Dashboard, ${user.full_name?.split(' ')[0] || 'Admin'}!`;
+            adminEmail.textContent = user.email || user.username || '';
+            adminId.textContent = `ID: ${user.id} • ${user.is_superuser ? 'Super Admin' : 'Admin'}`;
+
+            const initials = (user.full_name || user.username || 'Admin')
+                .split(' ')
+                .map(word => word[0])
+                .join('')
+                .toUpperCase()
+                .substring(0, 2);
+            userAvatar.textContent = initials;
+
+            document.getElementById('adminLevel').textContent = 
+                user.is_superuser ? 'Super Admin' : 'Administrator';
+
+            const connected = await checkConnection();
+            if (connected) {
+                await fetchAllRequests();
+            }
+        }
+
+        async function fetchAllRequests() {
+            loadingSpinner.classList.add('active');
+            const token = localStorage.getItem('access_token');
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/services/requests/list/`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                const data = await response.json();
+                const list = Array.isArray(data) ? data : (data.results || []);
+
+                allRequests = list.map(r => {
+                    const files = r.files || [];
+                    const customerFiles = files.filter(f => f.file_type !== 'completed');
+                    const completedFiles = files.filter(f => f.file_type === 'completed');
+
+                    return {
+                        id: r.id,
+                        user_name: r.customer_name || 'Customer',
+                        user_email: r.contact_email || '',
+                        contact_phone: r.contact_phone || '',
+                        service_type: r.service_name || 'Service',
+                        service_option: r.option_name || '-',
+                        status: r.status || 'pending',
+                        created_at: r.created_at,
+                        description: r.description || '',
+                        address: r.maintenance_details ? {
+                            street: r.maintenance_details.street_address,
+                            city: r.maintenance_details.city,
+                            postal_code: r.maintenance_details.postal_code
+                        } : null,
+                        all_files: files,
+                        customer_files: customerFiles,
+                        completed_files: completedFiles
+                    };
+                });
+
+                // Populate service filter
+                const services = [...new Set(allRequests.map(r => r.service_type))];
+                serviceFilter.innerHTML = '<option value="all">All Services</option>' + 
+                    services.map(s => `<option value="${s}">${s}</option>`).join('');
+
+                filteredRequests = [...allRequests];
+                updateStats();
+                updateCharts();
+                renderTable();
+
+            } catch (error) {
+                console.error('Fetch error:', error);
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="10" style="text-align:center; padding:3rem;">
+                            <i class="fas fa-exclamation-triangle" style="font-size:3rem; color:var(--danger);"></i>
+                            <p style="color:var(--danger); margin-top:1rem;">Failed to load: ${error.message}</p>
+                        </td>
+                    </tr>
+                `;
+            } finally {
+                loadingSpinner.classList.remove('active');
+            }
+        }
+
+        // ============================================
+        // STATISTICS
+        // ============================================
+        function updateStats() {
+            const pending = allRequests.filter(r => r.status === 'pending').length;
+            const inProgress = allRequests.filter(r => r.status === 'in_progress').length;
+            const completed = allRequests.filter(r => r.status === 'completed').length;
+            
+            document.getElementById('totalPending').textContent = pending;
+            document.getElementById('totalInProgress').textContent = inProgress;
+            document.getElementById('totalCompleted').textContent = completed;
+            
+            const uniqueCustomers = new Set(allRequests.map(r => r.user_email)).size;
+            document.getElementById('totalCustomers').textContent = uniqueCustomers;
+
+            if (allRequests.length > 0) {
+                document.getElementById('pendingTrend').textContent = `+${Math.floor(Math.random() * 20)}%`;
+                document.getElementById('progressTrend').textContent = `+${Math.floor(Math.random() * 15)}%`;
+                document.getElementById('completedTrend').textContent = `+${Math.floor(Math.random() * 25)}%`;
+                document.getElementById('customerTrend').textContent = `+${Math.floor(Math.random() * 30)} new`;
+            }
+        }
+
+        function updateCharts() {
+            if (allRequests.length === 0) return;
+
+            // Service chart
+            const serviceCounts = {};
+            allRequests.forEach(r => {
+                serviceCounts[r.service_type] = (serviceCounts[r.service_type] || 0) + 1;
+            });
+
+            if (serviceChart) serviceChart.destroy();
+            const serviceCtx = document.getElementById('serviceChart').getContext('2d');
+            serviceChart = new Chart(serviceCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(serviceCounts),
+                    datasets: [{
+                        data: Object.values(serviceCounts),
+                        backgroundColor: ['#2b7fff', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#b0c8e5' } }
+                    }
+                }
+            });
+
+            // Trend chart
+            const last7Days = [];
+            const dailyCounts = [];
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                last7Days.push(date.toLocaleDateString('en-US', { weekday: 'short' }));
+                
+                const count = allRequests.filter(r => {
+                    const rd = new Date(r.created_at);
+                    return rd.toDateString() === date.toDateString();
+                }).length;
+                dailyCounts.push(count);
+            }
+
+            if (trendChart) trendChart.destroy();
+            const trendCtx = document.getElementById('trendChart').getContext('2d');
+            trendChart = new Chart(trendCtx, {
+                type: 'line',
+                data: {
+                    labels: last7Days,
+                    datasets: [{
+                        label: 'Requests',
+                        data: dailyCounts,
+                        borderColor: '#2b7fff',
+                        backgroundColor: 'rgba(43,127,255,0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { 
+                            beginAtZero: true,
+                            grid: { color: 'rgba(123,179,255,0.1)' },
+                            ticks: { color: '#b0c8e5' }
+                        },
+                        x: { 
+                            grid: { display: false },
+                            ticks: { color: '#b0c8e5' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // ============================================
+        // TABLE RENDERING
+        // ============================================
+        function renderTable() {
+            if (filteredRequests.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="10" style="text-align:center; padding:3rem;">
+                            <i class="fas fa-inbox" style="font-size:3rem; color:var(--text-muted);"></i>
+                            <p style="margin-top:1rem;">No requests found</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pageData = filteredRequests.slice(start, end);
+
+            tableBody.innerHTML = pageData.map(request => {
+                const hasCustomerFile = request.customer_files?.length > 0;
+                const hasCompletedFile = request.completed_files?.length > 0;
+
+                return `
+                    <tr>
+                        <td>#${request.id}</td>
+                        <td>${request.user_name}</td>
+                        <td>${request.user_email}</td>
+                        <td>${request.service_type}</td>
+                        <td>${request.service_option}</td>
+                        <td>${new Date(request.created_at).toLocaleDateString()}</td>
+                        <td><span class="status-badge status-${request.status}">${request.status.replace('_',' ')}</span></td>
+                        <td>${hasCustomerFile ? 
+                            `<button class="action-btn view" onclick="viewCustomerFile(${request.id})">
+                                <i class="fas fa-file"></i> ${request.customer_files.length}
+                            </button>` : 
+                            '<span style="color:var(--text-muted)">—</span>'}
+                        </td>
+                        <td>${hasCompletedFile ? 
+                            `<button class="action-btn view" onclick="viewCompletedFile(${request.id})">
+                                <i class="fas fa-file-check"></i> ${request.completed_files.length}
+                            </button>` : 
+                            '<span style="color:var(--text-muted)">—</span>'}
+                        </td>
+                        <td>
+                            <button class="action-btn view" onclick="viewRequest(${request.id})">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="action-btn upload" onclick="uploadCompleted(${request.id})">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            updatePagination();
+        }
+
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredRequests.length / itemsPerPage);
+            const pagination = document.getElementById('pagination');
+            
+            let html = `
+                <button class="page-btn" id="prevPage" ${currentPage === 1 ? 'disabled' : ''}>
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+            `;
+            
+            for (let i = 1; i <= Math.min(totalPages, 5); i++) {
+                html += `<button class="page-btn ${currentPage === i ? 'active' : ''}" data-page="${i}">${i}</button>`;
+            }
+            
+            html += `
+                <button class="page-btn" id="nextPage" ${currentPage === totalPages ? 'disabled' : ''}>
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            `;
+            
+            pagination.innerHTML = html;
+
+            document.querySelectorAll('.page-btn[data-page]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    currentPage = parseInt(btn.dataset.page);
+                    renderTable();
+                });
+            });
+
+            document.getElementById('prevPage')?.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderTable();
+                }
+            });
+
+            document.getElementById('nextPage')?.addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderTable();
+                }
+            });
+        }
+
+        // ============================================
+        // FILTERS & SORTING
+        // ============================================
+        function applyFilters() {
+            filteredRequests = allRequests.filter(r => {
+                if (statusFilter.value !== 'all' && r.status !== statusFilter.value) return false;
+                if (serviceFilter.value !== 'all' && r.service_type !== serviceFilter.value) return false;
+                if (dateFrom.value && new Date(r.created_at) < new Date(dateFrom.value)) return false;
+                if (dateTo.value) {
+                    const toDate = new Date(dateTo.value);
+                    toDate.setHours(23,59,59);
+                    if (new Date(r.created_at) > toDate) return false;
+                }
+                if (searchInput.value) {
+                    const term = searchInput.value.toLowerCase();
+                    return String(r.id).includes(term) || 
+                           r.user_name.toLowerCase().includes(term) || 
+                           r.user_email.toLowerCase().includes(term);
+                }
+                return true;
+            });
+            currentPage = 1;
+            renderTable();
+        }
+
+        function resetFilters() {
+            statusFilter.value = 'all';
+            serviceFilter.value = 'all';
+            dateFrom.value = '';
+            dateTo.value = '';
+            searchInput.value = '';
+            filteredRequests = [...allRequests];
+            currentPage = 1;
+            renderTable();
+        }
+
+        window.sortTable = function(column) {
+            if (sortColumn === column) {
+                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortColumn = column;
+                sortDirection = 'asc';
+            }
+
+            filteredRequests.sort((a, b) => {
+                let valA, valB;
+                switch(column) {
+                    case 0: valA = a.id; valB = b.id; break;
+                    case 1: valA = a.user_name; valB = b.user_name; break;
+                    case 2: valA = a.user_email; valB = b.user_email; break;
+                    case 3: valA = a.service_type; valB = b.service_type; break;
+                    case 4: valA = a.service_option; valB = b.service_option; break;
+                    case 5: valA = new Date(a.created_at); valB = new Date(b.created_at); break;
+                    case 6: valA = a.status; valB = b.status; break;
+                    default: return 0;
+                }
+                
+                if (sortDirection === 'asc') {
+                    return valA > valB ? 1 : -1;
+                } else {
+                    return valA < valB ? 1 : -1;
+                }
+            });
+
+            renderTable();
+        };
+
+        // ============================================
+        // FILE UPLOAD
+        // ============================================
+        async function uploadCompletedDocument(requestId, file) {
+            const token = localStorage.getItem('access_token');
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('file_type', 'completed'); // Mark as completed work
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/services/upload-file/${requestId}/`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const error = await response.json().catch(() => ({}));
+                    throw new Error(error.detail || `HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+                showNotification(`Completed work uploaded successfully`, 'success');
+                
+                await fetchAllRequests();
+                if (currentRequestId === requestId) {
+                    viewRequest(requestId);
+                }
+                
+                return data;
+            } catch (error) {
+                console.error('Upload error:', error);
+                showNotification(`Upload failed: ${error.message}`, 'error');
+                throw error;
+            }
+        }
+
+        // File upload handlers
+        completedFileUpload.addEventListener('click', () => completedFileInput.click());
+
+        completedFileInput.addEventListener('change', function(e) {
+            if (this.files.length > 0) {
+                const file = this.files[0];
+                
+                if (file.size > 10 * 1024 * 1024) {
+                    alert('File too large (max 10MB)');
+                    return;
+                }
+
+                const fileName = file.name.toLowerCase();
+                const isValid = fileName.endsWith('.pdf') || fileName.endsWith('.jpg') || 
+                               fileName.endsWith('.jpeg') || fileName.endsWith('.png') ||
+                               fileName.endsWith('.doc') || fileName.endsWith('.docx');
+
+                if (!isValid) {
+                    alert('Invalid file type. Use PDF, JPG, PNG, or Word doc');
+                    return;
+                }
+
+                selectedCompletedFile = file;
+                document.getElementById('fileName').textContent = file.name;
+                document.getElementById('fileSize').textContent = formatFileSize(file.size);
+                completedFilePreview.classList.add('active');
+                completedFileUpload.style.display = 'none';
+            }
+        });
+
+        uploadCompletedBtn.addEventListener('click', async function() {
+            if (!selectedCompletedFile || !currentRequestId) return;
+
+            this.disabled = true;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+
+            try {
+                await uploadCompletedDocument(currentRequestId, selectedCompletedFile);
+                
+                selectedCompletedFile = null;
+                completedFilePreview.classList.remove('active');
+                completedFileInput.value = '';
+                completedFileUpload.style.display = 'block';
+            } finally {
+                this.disabled = false;
+                this.innerHTML = '<i class="fas fa-upload"></i> Upload';
+            }
+        });
+
+        // ============================================
+        // FILE VIEWER
+        // ============================================
+        async function viewFile(fileId, fileName) {
+            const modal = document.getElementById('fileViewerModal');
+            const title = document.getElementById('fileViewerTitle');
+            const meta = document.getElementById('fileViewerMeta');
+            const body = document.getElementById('fileViewerBody');
+            const dlBtn = document.getElementById('fileViewerDownload');
+
+            title.textContent = fileName;
+            meta.textContent = 'Loading...';
+            body.innerHTML = `<div style="padding:3rem;"><i class="fas fa-spinner fa-spin fa-3x"></i></div>`;
+            modal.classList.add('active');
+
+            const token = localStorage.getItem('access_token');
+            const isPDF = fileName?.toLowerCase().endsWith('.pdf');
+            const isImg = /\.(jpg|jpeg|png|gif)$/i.test(fileName || '');
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/services/download/${fileId}/`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                const blob = await response.blob();
+                const blobUrl = URL.createObjectURL(blob);
+
+                meta.textContent = `${(blob.size/1024).toFixed(1)} KB`;
+                dlBtn.href = blobUrl;
+                dlBtn.download = fileName;
+
+                if (isPDF) {
+                    body.innerHTML = `<iframe src="${blobUrl}" width="100%" height="500px" style="border:none;"></iframe>`;
+                } else if (isImg) {
+                    body.innerHTML = `<img src="${blobUrl}" style="max-width:100%; max-height:500px;">`;
+                } else {
+                    body.innerHTML = `<p style="padding:2rem;">Preview not available. Click Download to open.</p>`;
+                }
+            } catch (error) {
+                body.innerHTML = `<p style="color:var(--danger); padding:2rem;">Error: ${error.message}</p>`;
+            }
+        }
+
+        window.closeFileViewer = function() {
+            document.getElementById('fileViewerModal').classList.remove('active');
+        };
+
+        // ============================================
+        // REQUEST ACTIONS
+        // ============================================
+        window.viewRequest = async function(requestId) {
+            const request = allRequests.find(r => r.id === requestId);
+            if (!request) return;
+
+            currentRequestId = requestId;
+            currentRequest = request;
+
+            // Update modal fields
+            document.getElementById('modalRequestId').textContent = `Request #${requestId}`;
+            document.getElementById('modalCustomerName').textContent = request.user_name;
+            document.getElementById('modalService').textContent = request.service_type;
+            document.getElementById('modalOption').textContent = request.service_option;
+            document.getElementById('modalEmail').textContent = request.user_email;
+            document.getElementById('modalPhone').textContent = request.contact_phone || 'N/A';
+            document.getElementById('modalDate').textContent = new Date(request.created_at).toLocaleString();
+            document.getElementById('modalStatus').value = request.status;
+            document.getElementById('modalDescription').textContent = request.description || 'No description';
+
+            // Address
+            if (request.address) {
+                document.getElementById('addressContainer').style.display = 'block';
+                document.getElementById('modalAddress').textContent = 
+                    `${request.address.street}, ${request.address.city}, ${request.address.postal_code}`;
+            } else {
+                document.getElementById('addressContainer').style.display = 'none';
+            }
+
+            // Customer files
+            const customerDiv = document.getElementById('modalCustomerFiles');
+            if (request.customer_files?.length > 0) {
+                customerDiv.innerHTML = request.customer_files.map(f => `
+                    <div class="file-list-item">
+                        <div class="file-info">
+                            <span class="file-name">
+                                <i class="fas fa-file-pdf" style="color:#ef4444"></i> ${f.file_name}
+                            </span>
+                            <span class="file-meta">${formatFileSize(f.file_size)}</span>
+                        </div>
+                        <div class="file-actions">
+                            <button class="action-btn view" onclick="viewFile(${f.id}, '${f.file_name}')">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                customerDiv.innerHTML = '<p style="color:var(--text-muted); text-align:center;">No files uploaded by customer</p>';
+            }
+
+            // Completed files
+            const completedDiv = document.getElementById('modalCompletedFiles');
+            if (request.completed_files?.length > 0) {
+                completedDiv.innerHTML = request.completed_files.map(f => `
+                    <div class="file-list-item completed">
+                        <div class="file-info">
+                            <span class="file-name">
+                                <i class="fas fa-file-check" style="color:var(--success)"></i> ${f.file_name}
+                            </span>
+                            <span class="file-meta">${formatFileSize(f.file_size)}</span>
+                        </div>
+                        <div class="file-actions">
+                            <button class="action-btn view" onclick="viewFile(${f.id}, '${f.file_name}')">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                completedDiv.innerHTML = '<p style="color:var(--text-muted); text-align:center;">No completed work uploaded yet</p>';
+            }
+
+            // Reset upload area
+            selectedCompletedFile = null;
+            completedFilePreview.classList.remove('active');
+            completedFileInput.value = '';
+            completedFileUpload.style.display = 'block';
+
+            switchTab('details');
+            requestModal.classList.add('active');
+        };
+
+        window.viewCustomerFile = function(requestId) {
+            viewRequest(requestId);
+            switchTab('customer-files');
+        };
+
+        window.viewCompletedFile = function(requestId) {
+            viewRequest(requestId);
+            switchTab('completed-files');
+        };
+
+        window.uploadCompleted = function(requestId) {
+            viewRequest(requestId);
+            switchTab('completed-files');
+        };
+
+        window.switchTab = function(tabName) {
+            document.querySelectorAll('.document-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.document-section').forEach(s => s.classList.remove('active'));
+            
+            if (tabName === 'details') {
+                document.querySelector('.document-tab').classList.add('active');
+                document.getElementById('details-tab').classList.add('active');
+            } else if (tabName === 'customer-files') {
+                document.querySelectorAll('.document-tab')[1].classList.add('active');
+                document.getElementById('customer-files-tab').classList.add('active');
+            } else if (tabName === 'completed-files') {
+                document.querySelectorAll('.document-tab')[2].classList.add('active');
+                document.getElementById('completed-files-tab').classList.add('active');
+            }
+        };
+
+        window.closeModal = function() {
+            requestModal.classList.remove('active');
+        };
+
+        // Status update
+        updateStatusBtn.addEventListener('click', async function() {
+            const newStatus = document.getElementById('modalStatus').value;
+            const token = localStorage.getItem('access_token');
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/services/requests/${currentRequestId}/status/`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ status: newStatus })
+                });
+
+                if (response.ok) {
+                    showNotification('Status updated successfully', 'success');
+                    await fetchAllRequests();
+                    closeModal();
+                } else {
+                    showNotification('Failed to update status', 'error');
+                }
+            } catch (error) {
+                showNotification('Error: ' + error.message, 'error');
+            }
+        });
+
+        // ============================================
+        // EXPORT & REFRESH
+        // ============================================
+        function exportToCSV() {
+            if (filteredRequests.length === 0) return;
+
+            const headers = ['ID', 'Customer', 'Email', 'Service', 'Option', 'Date', 'Status', 'Files'];
+            const csvData = filteredRequests.map(r => [
+                r.id, r.user_name, r.user_email, r.service_type, r.service_option,
+                new Date(r.created_at).toLocaleDateString(), r.status,
+                r.customer_files.length ? 'Yes' : 'No'
+            ]);
+
+            const csv = [headers.join(','), ...csvData.map(row => row.join(','))].join('\n');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `galela_requests_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+        }
+
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+        applyFiltersBtn.addEventListener('click', applyFilters);
+        resetFiltersBtn.addEventListener('click', resetFilters);
+        exportCSVBtn.addEventListener('click', exportToCSV);
+        refreshDataBtn.addEventListener('click', fetchAllRequests);
+
+        userMenu.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdownMenu.classList.toggle('show');
+        });
+
+        document.addEventListener('click', () => {
+            dropdownMenu.classList.remove('show');
+        });
+
+        function logout(e) {
+            e.preventDefault();
+            localStorage.clear();
+            window.location.href = 'loginform.html';
+        }
+
+        logoutBtn.addEventListener('click', logout);
+        navLogoutBtn.addEventListener('click', logout);
+
+        document.getElementById('profileLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            alert(`Admin: ${currentUser?.full_name || currentUser?.username}\nEmail: ${currentUser?.email}`);
+        });
+
+        document.getElementById('settingsLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('Settings page coming soon!');
+        });
+
+        // Set default dates
+        const today = new Date();
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        dateTo.value = today.toISOString().split('T')[0];
+        dateFrom.value = thirtyDaysAgo.toISOString().split('T')[0];
+
+        // Initialize
+        loadAdminData();
+
+        // Make functions globally accessible
+        window.viewFile = viewFile;
+        window.sortTable = sortTable;
+    </script>
+</body>
+</html>

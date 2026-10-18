@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="CSIR CeNAM internship research portfolio — cosmetic laboratory technology, plant extraction, microbiology, biological assays, materials characterization and formulation development.">
+<title>CSIR CeNAM | Cosmetic Laboratory Technology Research Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f4f7f4;
+  --panel:#ffffff;
+  --panel-soft:#eef3ef;
+  --ink:#172821;
+  --ink-soft:#53665e;
+  --muted:#7b8b84;
+  --line:#d2ddd5;
+  --green:#1f5945;
+  --green-2:#2e745b;
+  --blue:#35598a;
+  --violet:#704b92;
+  --amber:#b77a24;
+  --radius:14px;
+  --max:1080px;
+  --shadow:0 8px 28px rgba(23,40,33,.07);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'IBM Plex Sans',sans-serif;
+  line-height:1.72;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;height:auto;display:block}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+
+.wrap{width:min(var(--max),calc(100% - 40px));margin:auto}
+.mono{font-family:'IBM Plex Mono',monospace}
+
+h1,h2,h3,h4{font-family:'IBM Plex Serif',serif;line-height:1.2;color:var(--ink)}
+
+/* ---------- DISCLAIMER MODAL ---------- */
+.modal-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(23,40,33,.62);
+  backdrop-filter:blur(6px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  z-index:1000;
+  opacity:0;
+  visibility:hidden;
+  transition:opacity .25s ease,visibility .25s ease;
+}
+.modal-overlay.active{opacity:1;visibility:visible}
+.modal-box{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  max-width:640px;
+  width:100%;
+  max-height:calc(100vh - 48px);
+  overflow-y:auto;
+  box-shadow:0 24px 70px rgba(23,40,33,.28);
+  padding:34px 36px 30px;
+  transform:translateY(12px) scale(.98);
+  transition:transform .28s ease;
+}
+.modal-overlay.active .modal-box{transform:translateY(0) scale(1)}
+.modal-eyebrow{
+  font:600 .68rem 'IBM Plex Mono';
+  letter-spacing:.09em;
+  text-transform:uppercase;
+  color:var(--green-2);
+  margin-bottom:12px;
+}
+.modal-box h2{
+  font-size:clamp(1.3rem,2.4vw,1.65rem);
+  letter-spacing:-.02em;
+  margin-bottom:16px;
+}
+.modal-box p{
+  color:var(--ink-soft);
+  font-size:.93rem;
+  margin-bottom:14px;
+}
+.modal-box p:last-of-type{margin-bottom:0}
+.modal-box b{color:var(--ink)}
+.modal-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  margin-top:26px;
+  padding-top:22px;
+  border-top:1px solid var(--line);
+}
+.modal-btn{
+  font:600 .72rem 'IBM Plex Mono';
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  padding:12px 22px;
+  border-radius:9px;
+  border:1px solid var(--line);
+  background:var(--panel);
+  color:var(--ink-soft);
+  cursor:pointer;
+  transition:background .15s,color .15s,border-color .15s;
+}
+.modal-btn:hover{background:var(--panel-soft);color:var(--ink)}
+.modal-btn.primary{
+  background:var(--green);
+  border-color:var(--green);
+  color:#fff;
+}
+.modal-btn.primary:hover{background:var(--green-2);border-color:var(--green-2)}
+.modal-note{
+  margin-top:16px;
+  font:500 .68rem 'IBM Plex Mono';
+  color:var(--muted);
+  line-height:1.7;
+}
+body.modal-open{overflow:hidden}
+@media(max-width:600px){
+  .modal-box{padding:26px 22px 22px}
+  .modal-actions{flex-direction:column-reverse}
+  .modal-btn{width:100%}
+}
+
+/* ---------- NAV ---------- */
+nav.top{
+  position:sticky;top:0;z-index:100;
+  background:rgba(244,247,244,.95);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+}
+.nav-inner{
+  width:min(var(--max),calc(100% - 40px));
+  margin:auto;
+  display:flex;gap:6px 20px;flex-wrap:wrap;
+  padding:11px 0;
+}
+.nav-inner a{
+  font:600 .68rem 'IBM Plex Mono';
+  letter-spacing:.055em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  padding:4px 0;
+  border-bottom:1px solid transparent;
+  transition:color .15s,border-color .15s;
+}
+.nav-inner a:hover{color:var(--green);border-color:var(--green);text-decoration:none}
+
+/* ---------- HERO ---------- */
+.hero{padding:60px 0 40px;border-bottom:1px solid var(--line)}
+.eyebrow{
+  font:600 .74rem 'IBM Plex Mono';
+  letter-spacing:.09em;
+  text-transform:uppercase;
+  color:var(--green-2);
+  margin-bottom:14px;
+}
+.hero h1{font-size:clamp(2.2rem,5vw,3.6rem);max-width:820px;letter-spacing:-.03em}
+.hero .subtitle{font:600 .96rem 'IBM Plex Mono';color:var(--blue);margin-top:12px}
+.lede{font-size:1.02rem;color:var(--ink-soft);max-width:78ch;margin-top:18px}
+.lede b{color:var(--ink)}
+.hero-grid{display:grid;grid-template-columns:1fr 280px;gap:32px;align-items:start;margin-top:28px}
+.profile{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:10px;
+  box-shadow:var(--shadow);
+}
+.profile img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:9px}
+.caption{font:500 .68rem 'IBM Plex Mono';color:var(--muted);padding:9px 5px 3px}
+.hero-meta{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:22px}
+.meta{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:13px 15px}
+.meta span{display:block;font:600 .62rem 'IBM Plex Mono';letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.meta strong{display:block;margin-top:4px;font-size:.9rem}
+.readout{margin-top:28px}
+.bar{height:6px;border-radius:999px;background:linear-gradient(90deg,var(--violet),var(--amber),var(--green))}
+.labels{display:flex;justify-content:space-between;gap:10px;margin-top:7px;color:var(--muted);font:500 .63rem 'IBM Plex Mono';text-transform:uppercase;letter-spacing:.05em}
+.pipeline{
+  margin-top:18px;
+  padding:16px 20px;
+  border:1px solid var(--line);
+  background:var(--panel);
+  border-radius:var(--radius);
+  font:500 .76rem/2 'IBM Plex Mono';
+  color:var(--ink-soft);
+}
+.arrow{color:var(--green-2);padding:0 4px}
+
+/* ---------- SECTIONS ---------- */
+section{padding:56px 0;border-bottom:1px solid var(--line)}
+.section-head{display:flex;align-items:baseline;gap:13px}
+.section-num{font:600 .76rem 'IBM Plex Mono';color:var(--green-2)}
+.section-title{font-size:clamp(1.7rem,3vw,2.4rem);letter-spacing:-.02em}
+.section-intro{max-width:78ch;color:var(--ink-soft);margin-top:14px}
+.section-intro b{color:var(--ink)}
+
+/* ---------- TIMELINE ---------- */
+.timeline{margin-top:28px}
+.stage{display:grid;grid-template-columns:50px 1fr;gap:18px}
+.rail{display:flex;flex-direction:column;align-items:center}
+.dot{
+  width:36px;height:36px;border:1.5px solid var(--green-2);border-radius:50%;
+  display:grid;place-items:center;background:var(--panel);
+  font:600 .66rem 'IBM Plex Mono';color:var(--green);
+  flex-shrink:0;
+}
+.rail .line{width:1px;background:var(--line);flex:1;margin-top:5px}
+.stage:last-child .line{display:none}
+.stage .content{padding:2px 0 26px}
+.stage h3{font-size:1.05rem}
+.stage p{color:var(--ink-soft);font-size:.9rem;margin-top:4px}
+
+/* ---------- CARDS ---------- */
+.card-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:26px}
+.card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:22px 24px;
+  box-shadow:var(--shadow);
+}
+.card h3,.card h4{margin-bottom:8px;font-size:1.08rem}
+.card p{color:var(--ink-soft);font-size:.9rem}
+.formula{
+  margin-top:14px;
+  background:var(--panel-soft);
+  border-left:3px solid var(--green-2);
+  border-radius:7px;
+  padding:10px 13px;
+  font:500 .74rem/1.7 'IBM Plex Mono';
+  color:var(--green);
+}
+
+/* ---------- STEPS ---------- */
+.step{margin-top:26px;padding:22px 0;border-top:1px solid var(--line)}
+.step:first-of-type{border-top:0;margin-top:0}
+.step h3{font-size:1.12rem}
+.step p{color:var(--ink-soft);max-width:82ch;margin-top:7px;font-size:.94rem}
+
+/* ---------- FIGURES ---------- */
+.figure{margin-top:18px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;box-shadow:var(--shadow)}
+.figure img{
+  width:100%;
+  max-height:420px;
+  object-fit:contain;
+  border-radius:8px;
+  background:var(--paper);
+}
+.figure.small img{max-height:300px}
+.figure.medium img{max-height:380px}
+.figure .caption{padding:10px 6px 2px;font:500 .68rem 'IBM Plex Mono';color:var(--muted)}
+.figure-row{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:18px}
+.figure-row .figure{margin-top:0}
+
+/* ---------- TAGS ---------- */
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.tag{
+  font:500 .7rem 'IBM Plex Mono';
+  color:var(--ink);
+  background:var(--panel);
+  border:1px solid var(--line);
+  padding:6px 11px;
+  border-radius:999px;
+}
+
+/* ---------- VERDICT / NOTE ---------- */
+.verdict{
+  margin-top:26px;
+  border:1px solid #c9d8cd;
+  background:#f8fbf8;
+  border-radius:var(--radius);
+  padding:22px 24px;
+}
+.verdict h3{font-size:1.14rem;margin-bottom:6px}
+.verdict p{margin-top:10px;color:var(--ink-soft);font-size:.92rem}
+.verdict strong{color:var(--ink)}
+.note{
+  margin-top:20px;
+  padding:14px 17px;
+  border-radius:10px;
+  background:#fff9ed;
+  border:1px solid #ead9b5;
+  color:#70541e;
+  font-size:.85rem;
+}
+.note strong{color:#5b4214}
+
+/* ---------- DATA CALLOUTS ---------- */
+.data{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+.datum{background:var(--panel-soft);border-radius:9px;padding:12px 15px}
+.datum .k{font:600 .62rem 'IBM Plex Mono';text-transform:uppercase;color:var(--muted);letter-spacing:.04em}
+.datum .v{font:600 .95rem 'IBM Plex Mono';color:var(--green);margin-top:4px}
+
+/* ---------- TABLE ---------- */
+table{
+  width:100%;border-collapse:collapse;margin-top:20px;
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:10px;overflow:hidden;font-size:.87rem;
+}
+th{
+  text-align:left;font:600 .66rem 'IBM Plex Mono';
+  text-transform:uppercase;letter-spacing:.05em;
+  color:var(--muted);padding:11px 14px;border-bottom:1px solid var(--line);
+}
+td{padding:11px 14px;border-bottom:1px solid var(--line);color:var(--ink-soft);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td:first-child{font-weight:600;color:var(--ink);font-family:'IBM Plex Mono',monospace;font-size:.82rem}
+
+/* ---------- ASSAY GRID ---------- */
+.assay-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}
+.assay{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;box-shadow:var(--shadow)}
+.assay h3{font-size:1.05rem}
+.assay p{font-size:.86rem;color:var(--ink-soft);margin-top:8px}
+.method{margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:.82rem;color:var(--ink-soft)}
+
+/* ---------- RESULTS ---------- */
+.result-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:22px}
+.result{border:1px solid var(--line);background:var(--panel);border-radius:12px;padding:20px;box-shadow:var(--shadow)}
+.result .number{font:700 1.6rem 'IBM Plex Mono';color:var(--green)}
+.result .label{font:600 .66rem 'IBM Plex Mono';text-transform:uppercase;color:var(--muted);letter-spacing:.05em;margin-top:3px}
+.result p{font-size:.85rem;color:var(--ink-soft);margin-top:8px}
+
+/* ---------- CLAY BLOCK ---------- */
+.clay-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px}
+.clay{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:13px;text-align:center}
+.layers{display:flex;flex-direction:column;gap:4px}
+.layer{height:11px;border-radius:2px;background:#a85f35}
+.organic{height:11px;border-radius:2px;background:var(--amber)}
+.clay small{display:block;margin-top:9px;font:500 .66rem 'IBM Plex Mono';color:var(--muted)}
+
+/* ---------- FORMULATION ---------- */
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:26px}
+.form-card{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:22px;box-shadow:var(--shadow)}
+.form-card h3{font-size:1.1rem}
+.form-card .sub{font:500 .68rem 'IBM Plex Mono';color:var(--blue);margin-top:5px}
+.form-card p{color:var(--ink-soft);font-size:.88rem;margin-top:10px}
+.form-card ul{margin:12px 0 0 18px;color:var(--ink-soft);font-size:.85rem}
+.form-card li{margin:4px 0}
+.status{
+  display:inline-block;margin-top:12px;padding:5px 9px;
+  border-radius:999px;background:var(--panel-soft);
+  font:600 .62rem 'IBM Plex Mono';color:var(--green);text-transform:uppercase;
+}
+
+/* ---------- QUOTE ---------- */
+.quote{
+  margin-top:28px;padding:22px 26px;
+  border-left:4px solid var(--violet);
+  background:var(--panel);
+  border-radius:0 12px 12px 0;
+  font:500 1.02rem/1.65 'IBM Plex Serif';
+  box-shadow:var(--shadow);
+}
+
+/* ---------- FOOTER ---------- */
+footer{padding:40px 0 60px}
+.footer-box{border-top:1px solid var(--line);padding-top:22px}
+.footer-meta{font:500 .7rem/1.9 'IBM Plex Mono';color:var(--muted)}
+
+/* ---------- RESPONSIVE ---------- */
+@media(max-width:900px){
+  .hero-grid{grid-template-columns:1fr}
+  .profile{max-width:340px}
+  .assay-grid{grid-template-columns:1fr}
+  .clay-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:700px){
+  .wrap{width:min(var(--max),calc(100% - 28px))}
+  .nav-inner{width:calc(100% - 28px);gap:6px 14px}
+  .hero{padding-top:42px}
+  .hero-meta,.card-grid,.form-grid,.result-grid,.figure-row{grid-template-columns:1fr}
+  .data{grid-template-columns:1fr 1fr}
+  .labels{font-size:.54rem}
+  .pipeline{font-size:.66rem}
+  .stage{grid-template-columns:40px 1fr}
+  .dot{width:32px;height:32px}
+  .clay-grid{grid-template-columns:1fr 1fr}
+  .figure img{max-height:300px}
+}
+@media print{
+  nav.top,.modal-overlay{display:none}
+  body{background:#fff}
+  .hero,section{padding:32px 0}
+  .card,.profile,.form-card,.assay,.result,.quote,.figure{box-shadow:none}
+  .wrap{width:100%}
+  a{color:inherit}
+  .figure img{max-height:380px}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ DISCLAIMER MODAL ============ -->
+<div class="modal-overlay" id="disclaimerModal" role="dialog" aria-modal="true" aria-labelledby="disclaimerTitle" aria-describedby="disclaimerBody">
+  <div class="modal-box">
+    <div class="modal-eyebrow">CSIR · CeNAM · Content Disclaimer</div>
+    <h2 id="disclaimerTitle">Before you continue</h2>
+
+    <p id="disclaimerBody">I wish to confirm that all information contained in this portfolio — including media, written content and any laboratory equipment shown — is used solely by the CSIR for research training purposes. It does not represent the actual testing equipment, methods or facilities used for CSIR client, partner or customer work.</p>
+
+    <p>This portfolio is a personal record of laboratory training and research development activities undertaken as a CSIR Cosmetic Laboratory Technologist Intern. It is not a statement of CSIR testing capabilities, accredited methods, or commercial services.</p>
+
+    <div class="modal-note">By selecting “I understand and agree”, you acknowledge that you have read and accepted this disclaimer.</div>
+
+    <div class="modal-actions">
+      <button type="button" class="modal-btn" id="declineBtn">Decline</button>
+      <button type="button" class="modal-btn primary" id="agreeBtn">I understand and agree</button>
+    </div>
+  </div>
+</div>
+
+<nav class="top" aria-label="Primary navigation">
+  <div class="nav-inner">
+    <a href="#overview">Overview</a>
+    <a href="#workflow">Workflow</a>
+    <a href="#preparation">Sample Prep</a>
+    <a href="#extraction">Extraction</a>
+    <a href="#microbiology">Microbiology</a>
+    <a href="#bioassays">Bioassays</a>
+    <a href="#characterization">Characterization</a>
+    <a href="#formulation">Formulation</a>
+    <a href="#reflection">Reflection</a>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero wrap" id="overview">
+  <div class="eyebrow">Council for Scientific and Industrial Research · CeNAM</div>
+  <h1>Cosmetic Laboratory Technology at CSIR</h1>
+  <div class="subtitle">Internship Research Portfolio · Xolane Isaac Galela · BSc Chemistry</div>
+
+  <div class="hero-grid">
+    <div>
+      <p class="lede">This portfolio documents my practical laboratory development at the CSIR Centre for Nanostructures and Advanced Materials (CeNAM), with emphasis on cosmetic laboratory technology, natural-product extraction, microbiology, biological activity testing, materials characterization, data interpretation and formulation development.</p>
+      <p class="lede">The work is presented as a connected research pathway rather than a collection of isolated experiments: <b>prepare → extract → process → screen → quantify → characterize → formulate → evaluate.</b></p>
+
+      <div class="hero-meta">
+        <div class="meta"><span>Role</span><strong>Cosmetic Laboratory Technologist Intern</strong></div>
+        <div class="meta"><span>Research environment</span><strong>CSIR · CeNAM</strong></div>
+        <div class="meta"><span>Internship period</span><strong>01 Mar 2026 – 28 Feb 2027</strong></div>
+        <div class="meta"><span>Primary areas</span><strong>Chemistry · Microbiology · Materials · Formulation</strong></div>
+      </div>
+
+      <div class="readout">
+        <div class="bar"></div>
+        <div class="labels"><span>prepared sample</span><span>measured evidence</span><span>interpreted outcome</span></div>
+      </div>
+
+      <div class="pipeline">
+        Sample preparation <span class="arrow">→</span> Extraction <span class="arrow">→</span> Filtration/concentration <span class="arrow">→</span> Microbiology <span class="arrow">→</span> Bioactivity <span class="arrow">→</span> Characterization <span class="arrow">→</span> Formulation <span class="arrow">→</span> Evaluation
+      </div>
+    </div>
+
+    <div class="profile">
+      <img src="https://i.postimg.cc/5yWKkHVK/20260302-150817.jpg" alt="Xolane Isaac Galela at CSIR">
+      <div class="caption">Figure 1. Xolane Isaac Galela — BSc Chemistry.</div>
+    </div>
+  </div>
+
+  <div class="note"><strong>Acknowledgement.</strong> The work documented here was undertaken within the CSIR research environment with guidance from Dr Phumelele Kleyi, Senior Researcher, and Dr Sreejarani Kesavan Pillai, Research Group Leader.</div>
+</header>
+<!-- FIX: added closing </header> above -->
+
+<!-- ================= WORKFLOW ================= -->
+<section id="workflow">
+  <div class="wrap">
+    <div class="section-head"><span class="section-num">01</span><h2 class="section-title">Research Workflow</h2></div>
+    <p class="section-intro">The internship developed as a chain of evidence. Each stage produced material, measurements or observations that informed the next experimental decision.</p>
+
+    <div class="timeline">
+      <div class="stage"><div class="rail"><div class="dot">01</div><div class="line"></div></div><div class="content"><h3>Sample preparation</h3><p>Prepare and document plant/material samples with controlled mass, drying, grinding, labelling and storage.</p></div></div>
+      <div class="stage"><div class="rail"><div class="dot">02</div><div class="line"></div></div><div class="content"><h3>Extraction &amp; processing</h3><p>Compare extraction approaches, followed by filtration, concentration and preparation of testable crude material.</p></div></div>
+      <div class="stage"><div class="rail"><div class="dot">03</div><div class="line"></div></div><div class="content"><h3>Microbiological screening</h3><p>Establish controlled microbial systems and screen extracts for observable antimicrobial activity.</p></div></div>
+      <div class="stage"><div class="rail"><div class="dot">04</div><div class="line"></div></div><div class="content"><h3>Quantitative biological testing</h3><p>Progress active samples into MIC, antioxidant and enzyme-inhibition assays using controls, blanks and replicate measurements.</p></div></div>
+      <div class="stage"><div class="rail"><div class="dot">05</div><div class="line"></div></div><div class="content"><h3>Analytical characterization</h3><p>Use FTIR, XRD, TEM, SEM, TGA/TG and DSC to establish chemical, structural, morphological and thermal evidence.</p></div></div>
+      <div class="stage"><div class="rail"><div class="dot">06</div></div><div class="content"><h3>Formulation &amp; application</h3><p>Translate selected actives and characterized materials into cosmetic product systems and assess intended functionality.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SAMPLE PREPARATION ================= -->
+<section id="preparation">
+  <div class="wrap">
+    <div class="section-head"><span class="section-num">02</span><h2 class="section-title">Plant Sample Preparation</h2></div>
+    <p class="section-intro"><em>Ocimum basilicum</em> (basil) was selected as a natural-product model because its leaves contain phenolic compounds, flavonoids and essential oils associated with antioxidant and antimicrobial properties. Approximately 4 kg of fresh basil leaves was processed, yielding approximately 542 g of dried leaf powder after removal of stems.</p>
+
+    <div class="step">
+      <h3>Step 1 — Weighing</h3>
+      <p>The basil leaves were weighed using an analytical balance to determine the total amount of plant material available before extraction.</p>
+      <div class="figure"><img src="https://i.postimg.cc/3NsPDw3k/20260911-093820.jpg" alt="Basil leaves being weighed using an analytical balance"><div class="caption">Figure 2. Initial weighing of basil material.</div></div>
+    </div>
+
+    <div class="step">
+      <h3>Step 2 — Washing and preparation for drying</h3>
+      <p>The basil leaves were washed to remove dirt and unwanted material, then prepared for drying at a temperature below 50 °C.</p>
+      <div class="figure"><img src="https://i.postimg.cc/cCpV8JdG/20260911-134358.jpg" alt="Basil leaves prepared for drying"><div class="caption">Figure 3. Basil leaves prepared for drying.</div></div>
+    </div>
+
+    <div class="step">
+      <h3>Step 3 — Drying and grinding</h3>
+      <p>Once completely dry, the leaves were ground using a coffee grinder to produce a finer plant material with increased surface area for extraction.</p>
+      <div class="figure-row">
+        <div class="figure"><img src="https://i.postimg.cc/WzFB3ZLM/20260917-105745.jpg" alt="Dried basil leaves"><div class="caption">Figure 4. Dried basil leaves before grinding.</div></div>
+        <div class="figure"><img src="https://i.postimg.cc/FzdMRS52/20260917-105733.jpg" alt="Grinding dried basil leaves"><div class="caption">Figure 5. Grinding of dried basil leaves.</div></div>
+      </div>
+    </div>
+
+    <div class="step">
+      <h3>Step 4 — Final basil powder</h3>
+      <p>The final basil leaf powder obtained from approximately 4 kg of fresh basil leaves, after removing the stems, weighed approximately 542 g. The green colour of the dried material indicated that the leaves retained their characteristic colour during drying. The resulting powder was then ready for extraction.</p>
+      <div class="figure"><img src="https://i.postimg.cc/zvbsBhZR/20260917-122043.jpg" alt="Final basil leaf powder ready for extraction"><div class="caption">Figure 6. Final basil leaf powder ready for extraction.</div></div>
+    </div>
+
+    <div class="step">
+      <h3>Recorded preparation data</h3>
+      <p>Measurements and observations recorded throughout sample preparation were documented to keep track of mass changes from fresh leaves to the final dried powder.</p>
+      <div class="figure"><img src="https://i.postimg.cc/mD5xBwqc/20260917-130434.jpg" alt="Recorded basil sample preparation data"><div class="caption">Figure 7. Recorded basil sample preparation data.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= EXTRACTION ================= -->
+<section id="extraction">
+  <div class="wrap">
+    <div class="section-head"><span class="section-num">03</span><h2 class="section-title">Extraction Chemistry</h2></div>
+    <p class="section-intro">Everything downstream depended on this stage: accurate mass and volume measurements, correct solvent selection, sample homogeneity, filtration, labelling and contamination prevention. A poorly prepared sample makes even a correctly operating instrument produce unreliable data. This stage introduces the crucial process of extracting the active ingredient that will be used for testing and for formulation at a later stage.</p>
+    <p class="section-intro" style="margin-top:18px;"><em>Ocimum basilicum</em> is an aromatic plant that has been used for centuries in traditional medicine and as a culinary herb. Basil leaves contain phenolic compounds, flavonoids and essential oils associated with antioxidant and antimicrobial properties. Two extraction techniques were compared, each differing in how the solvent meets the plant matrix and how energy is supplied to the process.</p>
+
+    <div class="figure"><img src="https://i.postimg.cc/4yDrh3sq/20260911-134413.jpg" alt="Ocimum basilicum"><div class="caption">Figure 8. <em>Ocimum basilicum</em> — plant material used for extraction.</div></div>
+
+    <div class="card-grid">
+      <article class="card">
+        <h3>Reflux Extraction</h3>
+        <p>Plant material is heated in solvent under a condenser, so evaporated solvent returns to the vessel instead of being lost. Heat speeds extraction, but temperature has to be controlled because some compounds are heat-sensitive.</p>
+        <div class="formula">heating → evaporation → condensation → return → continuous extraction</div>
+
+        <h3 style="margin-top:18px;font-size:1rem;">Method</h3>
+        <p>Approximately 25 g of basil powder was transferred to a 500 mL round-bottom flask and rinsed with 10 mL distilled water. A further 240 mL of distilled water was added to make up the solvent volume. The condenser setup was prepared as shown. The system was heated for approximately 24 hours while the temperature was maintained below 100 °C.</p>
+        <div class="figure small"><img src="https://i.postimg.cc/SNKgftKQ/20260317-130829.jpg" alt="Reflux extraction setup"><div class="caption">Figure 9. Reflux extraction setup.</div></div>
+        <div class="figure small"><img src="https://i.postimg.cc/WbfXW6DC/20260311-090713.jpg" alt="Result after heating"><div class="caption">Figure 10. Result after 24 h of reflux heating.</div></div>
+        <div class="figure small"><img src="https://i.postimg.cc/KvsJqrKn/20260317-111917.jpg" alt="Final reflux extract"><div class="caption">Figure 12. Final reflux extract stored for microbiology and bioassay testing.</div></div>
+      </article>
+
+      <article class="card">
+        <h3>Ultrasonic-Assisted Extraction</h3>
+        <p>Ultrasonic energy disrupts plant structures and improves solvent penetration, increasing compound release. It illustrates that extraction methods differ not just by solvent, but by the mechanism used to enhance mass transfer.</p>
+        <div class="formula">ultrasonic energy → structural disruption → improved mass transfer</div>
+
+        <h3 style="margin-top:18px;font-size:1rem;">Method</h3>
+        <p>Approximately 25 g of basil powder was transferred to a conical flask and rinsed with 10 mL ethanol. A further 240 mL of ethanol was added to make the volume up to 250 mL. The flask was placed in an ultrasonicator. The system was sonicated for approximately 2 hours while the temperature was maintained below 25 °C.</p>
+        <div class="figure small"><img src="https://i.postimg.cc/vBBRJj0p/20260921-104504.jpg" alt="Ultrasonic-assisted extraction setup"><div class="caption">Figure 13. Ultrasonic-assisted extraction setup.</div></div>
+        <div class="figure small"><img src="https://i.postimg.cc/Z5tSWwqC/20260923-075930.jpg" alt="Result after sonication"><div class="caption">Figure 14. Result after 2 h of sonication.</div></div>
+        <div class="figure small"><img src="https://i.postimg.cc/8PrGk2TJ/20260923-101734.jpg" alt="Final ultrasonic extract"><div class="caption">Figure 16. Final ultrasonic extract stored for microbiology and bioassay testing.</div></div>
+      </article>
+    </div>
+
+    <div class="readout" style="margin-top:26px;">
+      <div class="bar"></div>
+      <div class="labels"><span>raw extract</span><span>concentrated, testable extract</span></div>
+    </div>
+
+    <div class="card-grid" style="margin-top:8px;">
+      <div class="card">
+        <h4>Vacuum Filtration</h4>
+        <p>Reduced pressure pulls the liquid extract through a filtration medium, separating it from solid plant residue. The lesson here: extraction isn't finished when a compound enters the solvent — the extract still has to be processed before it's useful.</p>
+
+        <p style="margin-top:14px;">A direct visual comparison of the two filtration outcomes shows a clear difference in the recovered extract. The reflux filtration yielded a brown filtrate, while the ultrasonic-assisted filtration yielded a distinctly green filtrate — indicating greater release of chlorophyll and other phytochemicals from the plant matrix through ultrasonic cell-wall disruption.</p>
+
+        <div class="figure-row" style="margin-top:16px;">
+          <div class="figure small">
+            <img src="https://i.postimg.cc/W1FSQFrX/20260310-133324.jpg" alt="Reflux extract filtration">
+            <div class="caption">Reflux extract filtration — brown filtrate.</div>
+          </div>
+          <div class="figure small">
+            <img src="https://i.postimg.cc/Cx3JYhsz/20260310-123730.jpg" alt="Ultrasonic extract filtration">
+            <div class="caption">Ultrasonic extract filtration — green filtrate.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h4>Rotary Evaporation and Distillation</h4>
+        <div class="formula">extract → reduced pressure + heat + rotation → solvent removal → concentrated extract</div>
+        <p style="margin-top:12px;">Reduced pressure plus rotation and controlled heating lower the solvent's effective boiling point, concentrating the extract efficiently. Skills built: rig set-up, temperature selection, monitoring solvent removal and preventing sample loss. The crude from ultrasonication was concentrated using a rotary evaporator at another facility, producing the concentrated crude shown below.</p>
+        <div class="figure small"><img src="https://i.postimg.cc/R0HGVBxQ/20261001-161259.jpg" alt="Concentrated crude extract after rotary evaporation"><div class="caption">Figure 17. Concentrated crude extract after rotary evaporation.</div></div>
+      </div>
+    </div>
+
+    <div class="verdict">
+      <h3>Final verdict of this stage</h3>
+      <p>Ultrasonication was found to be more efficient and effective, showing signs of extracting the majority of phytochemicals — observed from the green colour of the filtration, which showed rupture of the basil cell wall and release of chlorophyll along with other phytochemicals. Reflux relied mostly on osmosis between the solvent environment and the interior of the cell, and was therefore less able to diffuse all phytochemicals through the cell wall; it also took a longer period to complete extraction.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MICROBIOLOGY ================= -->
+<section id="microbiology">
+  <div class="wrap">
+    <div class="section-head"><span class="section-num">04</span><h2 class="section-title">Microbial Testing</h2></div>
+    <p class="section-intro">Extraction naturally led into microbiology: first prepare the chemical sample, then investigate what biological effect it produces against each of the microorganisms listed below.</p>
+
+    <h3 style="margin-top:24px;font-size:1.15rem;">Crude sample preparation</h3>
+    <p class="section-intro">The crude sample from each extraction was weighed at approximately 250 mg and dissolved in approximately 10 mL DMSO solvent before testing.</p>
+
+    <h3 style="margin-top:26px;font-size:1.15rem;">Agar well diffusion method — crude antimicrobial activity testing</h3>
+    <p class="section-intro">An agar well diffusion assay was performed to evaluate the antimicrobial activity of crude extracts obtained through infusion and ultrasonication. All microbiological procedures were conducted aseptically inside a laminar flow cabinet, with hands, working surfaces and equipment sterilised throughout to minimise contamination.</p>
+    <p class="section-intro" style="margin-top:14px;">Separate microbial suspensions of <em>Malassezia furfur</em> and the others followed the same procedure as detailed for <em>M. furfur</em>: they were prepared using approximately 5 mL of sterile water. Fresh bacterial growth was transferred into the corresponding tubes using sterile inoculating loops and mixed thoroughly. The suspensions were then compared with a McFarland standard to standardise the microbial concentration.</p>
+    <p class="section-intro" style="margin-top:14px;">The bacterial suspensions were spread evenly onto Potato Dextrose Agar (PDA) + 1% butter plates using a sterile spreader. Wells were created in the agar using sterile equipment. Approximately 150 µL of DMSO was added to the control wells, while 150 µL of the infusion or ultrasonic crude extract was added to the respective treatment wells. The plates were incubated for approximately 18–36 hours, after which they were examined for visible zones of inhibition around the wells.</p>
+
+    <div class="figure-row">
+      <div class="figure"><img src="https://i.postimg.cc/rFsFgfqN/20260824-093341.jpg" alt="Antimicrobial screening plate"><div class="caption">Figure 18. Antimicrobial screening plate.</div></div>
+      <div class="figure"><img src="https://i.postimg.cc/SQDxWBbn/20260824-093129.jpg" alt="Antimicrobial screening plate"><div class="caption">Figure 19. Antimicrobial screening plate.</div></div>
+    </div>
+    <div class="figure"><img src="https://i.postimg.cc/05cypT1w/20260824-093317.jpg" alt="Antimicrobial screening plate"><div class="caption">Figure 20. Antimicrobial screening plate.</div></div>
+
+    <div class="tags">
+      <span class="tag">Pseudomonas aeruginosa — BHI · opportunistic skin pathogen</span>
+      <span class="tag">Malassezia furfur — PDA + 1% butter · associated with dandruff</span>
+      <span class="tag">Candida albicans — PDA · fungal/yeast model</span>
+      <span class="tag">Staphylococcus aureus — BHI · skin-associated bacterium</span>
+      <span class="tag">Escherichia coli — BHI · Gram-negative model</span>
+      <span class="tag">Cutibacterium acnes — anaerobic BHI · associated with acne</span>
+      <span class="tag">Streptococcus mutans — BHI · associated with dental caries</span>
+    </div>
+
+    <div class="verdict">
+      <h3>Final verdict of this stage</h3>
+      <p><strong>Reflux crude extract:</strong> The crude extract obtained through reflux extraction showed <strong>no observable antimicrobial activity</strong> against the microorganisms tested, including <em>Pseudomonas aeruginosa</em>, <em>Staphylococcus aureus</em>, <em>Escherichia coli</em>, <em>Cutibacterium acnes</em>, <em>Malassezia furfur</em>, <em>Candida albicans</em> and <em>Streptococcus mutans</em>. Based on the absence of observable inhibition, the reflux extract was not progressed to the MIC stage.</p>
+      <p><strong>Ultrasonication crude extract:</strong> In contrast, the crude extract produced through ultrasonication demonstrated observable antimicrobial activity against the tested microorganisms. This indicated that ultrasonication was more effective at recovering biologically active compounds from the <em>Ocimum basilicum</em> leaves. Due to the observed antimicrobial activity, the ultrasonication crude extract was selected for further investigation through <strong>minimum inhibitory concentration (MIC) testing</strong>.</p>
+      <p><strong>Overall:</strong> The antimicrobial screening established ultrasonication as the more suitable extraction approach for subsequent MIC investigation, while the reflux extract was excluded from further antimicrobial testing due to its lack of observable activity.</p>
+    </div>
+
+    <h3 style="margin-top:30px;font-size:1.15rem;">Minimum Inhibitory Concentration (MIC) testing</h3>
+    <p class="section-intro">Only the crude from ultrasonication was used for determination of the minimum inhibitory concentration (MIC). MIC testing, run by broth dilution, found the lowest concentration of a test substance that stopped visible microbial growth. Lower concentrations gave microorganisms more room to grow; higher concentrations increased the antimicrobial effect until growth was visibly inhibited.</p>
+
+    <!-- FIX: MIC results moved OUT of the <ol> so they're valid HTML -->
+    <div class="result-grid">
+      <div class="result"><div class="number">6.12 µg/mL</div><div class="label">MIC · Cutibacterium acnes</div><p>Lowest tested concentration reported to inhibit visible growth under the experimental conditions used.</p></div>
+      <div class="result"><div class="number">0.59 µg/mL</div><div class="label">MIC · Malassezia furfur</div><p>Lowest tested concentration reported to inhibit visible growth under the experimental conditions used.</p></div>
+    </div>
+
+    <p class="section-intro" style="margin-top:22px;">The 96-well microplate format carried over directly into three biological-activity assays — each following the same underlying pattern: an enzyme or radical reacts with a substrate to give a measurable signal, and an active sample reduces that signal.</p>
+
+    <ol style="margin:18px 0 0 22px;color:var(--ink-soft);font-size:.91rem;line-height:1.85;">
+      <li>A sterile 96-well microtiter plate was labelled according to the microorganism being tested (<em>Candida albicans</em> or <em>Malassezia furfur</em>). Rows A–C were designated for test samples and replicates; rows F–H for sample blanks; rows D and E were left empty to separate test and blank sections.</li>
+      <li>Using a micropipette, 150 µL of the appropriate sterile broth medium was dispensed into wells A1–A12, B1–B12 and C1–C12. The same volume was dispensed into wells F1–F10, G1–G10 and H1–H10, which served as sample blanks.</li>
+      <li>A volume of 150 µL of the prepared plant extract was added to the first well of each test row (A1, B1, C1) and to the corresponding blank rows (F1, G1, H1).</li>
+      <li>Two-fold serial dilutions of the extract were performed by transferring 150 µL from well 1 to well 2, mixing thoroughly and continuing sequentially up to well 10 in each row. After mixing in well 10, 150 µL was discarded to ensure equal volumes in all wells. Wells 11 and 12 were reserved for controls.</li>
+      <li>The microbial inoculum was prepared separately using the test-tube culture method. Fresh cultures of the test microorganisms were suspended in the appropriate broth medium and standardised prior to inoculation.</li>
+      <li>A volume of 20 µL of the prepared microbial suspension was added to wells A1–A11, B1–B11 and C1–C11. Well 12 in each row was not inoculated.</li>
+      <li>The blank wells (F1–F10, G1–G10, H1–H10) received no microbial inoculum. These wells contained only broth medium and serially diluted extract and were used as sample blanks to account for the colour and turbidity of the extract.</li>
+      <li>Well 11 served as the growth control and contained broth medium and microbial inoculum without the test extract. This control was used to confirm the viability and normal growth of the microorganism.</li>
+      <li>Well 12 served as the sterility control and contained only sterile broth medium. This control was used to confirm the absence of contamination in the media and assay system.</li>
+      <li>The microtiter plate was sealed and incubated under appropriate conditions for the test microorganism.</li>
+      <li>Following incubation, the wells were examined for visible microbial growth. The MIC was recorded as the lowest concentration of the extract that showed no visible growth when compared with the growth control.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ================= BIOASSAYS ================= -->
+<section id="bioassays">
+  <div class="wrap">
+    <div class="section-head"><span class="section-num">05</span><h2 class="section-title">Biological Activity Assays</h2></div>
+    <p class="section-intro">The biological assays were conducted on the crude extracts to determine whether they show activity that could be used as a cosmetic ingredient in later formulations.</p>
+
+    <div class="card-grid">
+      <article class="card">
+        <h3>DPPH Antioxidant Assay</h3>
+        <p>Antioxidants are compounds that help protect cells and biological materials from oxidative damage caused by free radicals and other reactive species. Free radicals can react with important molecules such as lipids, proteins and DNA, potentially contributing to cellular damage and oxidative stress. Measuring the ability of a substance to neutralise free radicals provides an indication of its potential antioxidant activity.</p>
+        <p style="margin-top:10px;">The DPPH (2,2-diphenyl-1-picrylhydrazyl) assay is a commonly used method for evaluating free-radical-scavenging activity. DPPH is a stable radical with an intense purple colour. When an antioxidant donates a hydrogen atom or electron to DPPH, the radical is reduced, resulting in a decrease in the intensity of the purple colour. This change is monitored spectrophotometrically at 517 nm, where a greater decrease in absorbance generally indicates stronger radical-scavenging activity. Ascorbic acid is commonly used as a reference antioxidant.</p>
+        <div class="formula">DPPH radical + antioxidant → reduced DPPH → decrease in absorbance</div>
+        <div class="readout" style="margin-top:14px;">
+          <div class="bar"></div>
+          <div class="labels"><span>DPPH radical (violet)</span><span>reduced DPPH (pale)</span></div>
+        </div>
+        <h4 style="margin-top:18px;font-size:1rem;">Experimental method</h4>
+        <p>A DPPH stock solution of 1000 µM was prepared by dissolving 19.72 mg of DPPH in 50 mL, then diluted ten-fold to obtain a 100 µM working solution. The extract stock solution was prepared at 10 mg/mL by dissolving 100 mg of extract in 10 mL. Serial dilutions were prepared at 200, 100, 50, 25 and 10 µg/mL. Ascorbic acid was used as the standard antioxidant at 1 mg/mL, followed by serial dilutions of 100, 50, 25, 10 and 5 µg/mL.</p>
+        <p style="margin-top:10px;">For the assay, 150 µL of the 100 µM DPPH working solution was mixed with 50 µL of the respective extract dilution in the experimental wells. The control consisted of 150 µL DPPH + 50 µL ethanol, while the sample blank contained 150 µL ethanol + 50 µL extract without DPPH. The positive standard consisted of 150 µL DPPH + 50 µL ascorbic acid. Absorbance was measured at 517 nm at 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55 and 60 min, with samples shaken before each measurement.</p>
+        <div class="figure small"><img src="https://i.postimg.cc/TwQj2sbp/image.png" alt="DPPH assay results"><div class="caption">Figure 21. DPPH antioxidant assay results.</div></div>
+      </article>
+
+      <article class="card">
+        <h3>Anti-Tyrosinase Assay</h3>
+        <p>Tyrosinase is a copper-containing enzyme that plays an important role in melanin production, particularly by catalysing the oxidation of L-tyrosine and L-DOPA during melanogenesis. Excessive tyrosinase activity can contribute to increased melanin formation and skin hyperpigmentation. Inhibiting tyrosinase is therefore of interest in cosmetic and pharmaceutical products aimed at controlling melanin production.</p>
+        <p style="margin-top:10px;">The L-DOPA-based tyrosinase inhibition assay determines whether an extract can reduce tyrosinase activity. In the assay, tyrosinase converts L-DOPA into coloured oxidation products, with the resulting change in absorbance monitored spectrophotometrically. If an extract contains compounds capable of inhibiting tyrosinase, less coloured product is formed. Kojic acid is commonly used as a positive control.</p>
+        <div class="formula">tyrosinase + L-DOPA → coloured product</div>
+        <h4 style="margin-top:18px;font-size:1rem;">Experimental method</h4>
+        <p>Anti-tyrosinase activity was evaluated in 96-well microplates using mushroom tyrosinase as the enzyme and L-DOPA as the substrate, with kojic acid used as the positive control. Mushroom tyrosinase (100 U/mL) was prepared in PBS (pH 6.8) by dissolving 1 mg of enzyme (1000 U) in 10 mL PBS. L-DOPA (10 mM) was prepared by dissolving 19.72 mg in 10 mL PBS. A 2 mM L-tyrosine solution was prepared by dissolving 3.62 mg in 10 mL PBS.</p>
+        <p style="margin-top:10px;">For the assay, 120 µL PBS, 20 µL tyrosinase and 20 µL of the respective extract were added to each test well and allowed to pre-incubate for 10 min. The enzymatic reaction was initiated by adding 40 µL of 10 mM L-DOPA, giving a final reaction volume of 200 µL. Kojic acid was tested under the same conditions. The plate was incubated at 35 °C, and absorbance was measured at 475 nm at 5-min intervals for 30 min.</p>
+        <p style="margin-top:10px;">The negative control contained 120 µL PBS, 20 µL tyrosinase, 20 µL solvent (ethanol) and 40 µL L-DOPA, while the solvent-free control used water instead of ethanol. A reagent blank containing 160 µL PBS and 40 µL L-DOPA, without enzyme or extract, accounted for the absorbance of the substrate. Sample blanks were prepared by combining 160 µL PBS, 20 µL extract and 20 µL L-DOPA, without tyrosinase, to correct for the intrinsic absorbance of the extracts.</p>
+        <div class="figure-row">
+          <div class="figure small"><img src="https://i.postimg.cc/2ysskGgR/20261006-093658.jpg" alt="Tyrosinase assay plate"><div class="caption">Figure 22. Tyrosinase assay plate after the experiment.</div></div>
+          <div class="figure small"><img src="https://i.postimg.cc/Bnk76c4t/20260615-144724.jpg" alt="Tyrosinase assay results"><div class="caption">Figure 23. Tyrosinase assay results. The percentage inhibition formula is the same as the one used in the antioxidant assay.</div></div>
+        </div>
+      </article>
+
+      <article class="card">
+        <h3>Anti-Elastase Assay</h3>
+        <p>Elastase is a proteolytic enzyme that hydrolyses elastin and other elastin-related proteins, contributing to the breakdown of structural components that help maintain skin firmness and elasticity. Excessive elastase activity has been associated with degradation of the extracellular matrix and processes related to skin ageing. In cosmetic and skincare research, inhibition of elastase is investigated as a potential approach for preserving skin structure and reducing the effects associated with loss of elasticity. In this assay, elastase activity was evaluated using a synthetic substrate that releases a coloured product upon enzymatic hydrolysis.</p>
+        <div class="formula">enzyme + substrate + inhibitor → reduced reaction</div>
+        <h4 style="margin-top:18px;font-size:1rem;">Experimental method</h4>
+        <p>Anti-elastase activity was determined using a colorimetric assay based on the hydrolysis of N-succinyl-Ala-Ala-Ala-p-nitroanilide (SANA) by porcine pancreatic elastase (PPE). The release of p-nitroaniline was monitored spectrophotometrically at 410 nm, where a reduction in absorbance indicated inhibition of elastase activity.</p>
+        <p style="margin-top:10px;">A 0.1 M Tris-HCl buffer (pH 8.0) was prepared by dissolving 1.2114 g Tris in approximately 80 mL distilled water, adjusting pH to 8.0 with HCl and making the volume up to 100 mL. PPE was prepared as a 10 U/mL working solution by dissolving 6.25 mg enzyme in 2.5 mL Tris-HCl buffer. The SANA substrate was prepared at 10 mM by dissolving 9.81 mg SANA in 2.5 mL Tris-HCl buffer, with a small volume of DMSO used to facilitate dissolution.</p>
+        <p style="margin-top:10px;">The test extracts were prepared at 20,000 µg/mL by dissolving 200 mg of extract in 10 mL ethanol. Serial two-fold dilutions were prepared to obtain concentrations of 10,000, 5,000, 2,500, 1,250, 625, 312.5, 156.25 and 78.125 µg/mL. Ursolic acid was used as the positive control at an initial 10,000 µg/mL by dissolving 100 mg in 10 mL DMSO, followed by dilution to the required concentrations.</p>
+        <p style="margin-top:10px;">The assay was performed in a 96-well microplate using a final reaction volume of 200 µL per well. Each reaction well contained 140 µL Tris-HCl buffer, 20 µL of the respective extract or ursolic acid solution, and 20 µL of PPE. The plate was incubated at room temperature for 15 min to allow interaction between enzyme and test samples. The reaction was initiated by addition of 20 µL of 10 mM SANA substrate, after which the plate was incubated in the dark for 30 min. Absorbance was measured at 410 nm at 5-min intervals.</p>
+        <p style="margin-top:10px;">Solvent controls were included to account for any effects of the extraction solvents on enzyme activity. The ethanol control contained 160 µL buffer, 20 µL PPE, 20 µL ethanol and 20 µL SANA, while the DMSO control contained 160 µL buffer, 20 µL PPE, 20 µL DMSO and 20 µL SANA. A reagent blank containing 180 µL buffer and 20 µL SANA was used to account for background absorbance. Sample blanks containing 180 µL buffer and 20 µL test sample, without enzyme, were included to correct for the intrinsic absorbance of the extracts.</p>
+      </article>
+    </div>
+
+    <div class="quote">An instrument reading is never automatically the final result. Sample, solvent, reagent and plate background all contribute to the signal — so every value moved through correction and calculation before it became a graph, and only then an interpretation. Some biological work images were not taken due to the hygiene requirements of these sensitive experiments.</div>
+  </div>
+</section>
+
+<!-- ================= CHARACTERIZATION ================= -->
+<section id="characterization">
+  <div class="wrap">
+    <div class="section-head"><span class="section-num">06</span><h2 class="section-title">Materials Characterization</h2></div>
+    <p class="section-intro">Here the guiding question changed. In extraction and microbiology it was <em>what compounds can be extracted, and what biological activity do they produce?</em> In characterization it became <em>what is the structure, composition, morphology and thermal behaviour of this material — and did the intended modification actually happen?</em></p>
+    <p class="section-intro" style="margin-top:12px;">Characterization was mainly used to understand active ingredients synthesised elsewhere which would later be incorporated into formulations — such as the Probiotic Lipid Hybrid (PLH) — and to understand modification effects based on measured property changes, as in the EFD clay intercalation study.</p>
+
+    <h3 style="margin-top:30px;font-size:1.25rem;">Characterization of Probiotic Lipid Hybrid (PLH)</h3>
+    <hr style="border:none;border-top:1px solid var(--line);margin:12px 0 18px;">
+
+    <h4>FTIR</h4>
+    <p class="section-intro">FTIR reads the chemical bonds and functional groups in a sample as a kind of fingerprint. It was run on materials including the PLH sample under the following parameters:</p>
+    <div class="data">
+      <div class="datum"><div class="k">Range</div><div class="v">4000–700 cm⁻¹</div></div>
+      <div class="datum"><div class="k">Resolution</div><div class="v">4 cm⁻¹</div></div>
+      <div class="datum"><div class="k">Scans</div><div class="v">8 runs</div></div>
+    </div>
+    <p class="section-intro" style="margin-top:12px;">Interpreting a spectrum meant relating bands — O–H, C–H, C=O, C–O and others — back to the material's expected composition: new peaks, shifts or intensity changes as evidence that a modification had actually occurred.</p>
+
+    <h4 style="margin-top:26px;">XRD</h4>
+    <p class="section-intro">XRD reads the crystallinity of the sample. It was run on materials including the PLH sample.</p>
+
+    <h4 style="margin-top:26px;">TGA</h4>
+    <p class="section-intro">TGA reads the degradation of sample mass over increasing temperature. It was run on the PLH sample under the following parameters:</p>
+    <div class="data">
+      <div class="datum"><div class="k">Start Temp</div><div class="v">0 °C</div></div>
+      <div class="datum"><div class="k">End Temp</div><div class="v">900 °C</div></div>
+      <div class="datum"><div class="k">Scan</div><div class="v">1 run</div></div>
+    </div>
+    <h4 style="margin-top:20px;font-size:1rem;">The Probiotic Lipid Hybrid Thermograph</h4>
+    <div class="figure"><img src="https://i.postimg.cc/ZYcq5dqW/image.png" alt="Probiotic Lipid Hybrid thermograph"><div class="caption">Figure 24. TGA thermograph of the Probiotic Lipid Hybrid.</div></div>
+
+    <h3 style="margin-top:36px;font-size:1.25rem;">Characterization of EFD Clay Intercalation</h3>
+    <hr style="border:none;border-top:1px solid var(--line);margin:12px 0 18px;">
+    <p class="section-intro"><b>EFD clay intercalation study.</b> Intercalation means introducing molecules between the layers of a layered material. Four EFD clay samples — pure, and organically intercalated at 9%, 15% and 35% — were compared by FTIR, XRD and TGA.</p>
+
+    <!-- FIX: closed the EFD clay figure properly and added caption -->
+    <div class="figure small">
+      <img src="https://i.postimg.cc/RFBc4BbW/20261006-080413.jpg" alt="EFD clay samples">
+      <div class="caption">Figure 25. EFD clay intercalation samples.</div>
+    </div>
+
+    <div class="clay-grid">
+      <div class="clay"><div class="layers"><span class="layer"></span><span class="layer"></span><span class="layer"></span></div><small>Pure EFD clay</small></div>
+      <div class="clay"><div class="layers"><span class="layer"></span><span class="organic" style="opacity:.5;"></span><span class="layer"></span></div><small>9% intercalation</small></div>
+      <div class="clay"><div class="layers"><span class="layer"></span><span class="organic" style="opacity:.75;"></span><span class="layer"></span></div><small>15% intercalation</small></div>
+      <div class="clay"><div class="layers"><span class="layer"></span><span class="organic"></span><span class="layer"></span></div><small>35% intercalation</small></div>
+    </div>
+
+    <h4 style="margin-top:26px;">FTIR</h4>
+    <p class="section-intro">FTIR reads the chemical bonds and functional groups in a sample. It was run on the EFD clay intercalation samples under the following parameters:</p>
+    <div class="data">
+      <div class="datum"><div class="k">Range</div><div class="v">4000–700 cm⁻¹</div></div>
+      <div class="datum"><div class="k">Resolution</div><div class="v">4 cm⁻¹</div></div>
+      <div class="datum"><div class="k">Scans</div><div class="v">8 runs</div></div>
+    </div>
+
+    <h4 style="margin-top:26px;">XRD</h4>
+    <p class="section-intro">XRD reads the crystallinity of the samples and how well the organic material intercalated between the layers of the clay. It was run on the EFD clay intercalation samples.</p>
+
+    <h4 style="margin-top:26px;">TGA</h4>
+    <p class="section-intro">TGA reads the degradation of sample mass over increasing temperature. It was run on the EFD clay intercalation samples under the following parameters:</p>
+    <div class="data">
+      <div class="datum"><div class="k">Start Temp</div><div class="v">0 °C</div></div>
+      <div class="datum"><div class="k">End Temp</div><div class="v">900 °C</div></div>
+      <div class="datum"><div class="k">Scan</div><div class="v">1 run</div></div>
+    </div>
+
+    <h4 style="margin-top:20px;font-size:1rem;">EFD Clay Intercalation Thermographs</h4>
+    <div class="figure-row">
+      <div class="figure"><img src="https://i.postimg.cc/T2HwH4Ch/image.png" alt="EFD clay thermograph"><div class="caption">Figure 26. EFD clay intercalation thermograph.</div></div>
+      <div class="figure"><img src="https://i.postimg.cc/3R5jpwDT/image.png" alt="EFD clay thermograph"><div class="caption">Figure 27. EFD clay intercalation thermograph.</div></div>
+    </div>
+    <div class="figure-row">
+      <div class="figure"><img src="https://i.postimg.cc/85mv6mSx/image.png" alt="EFD clay thermograph"><div class="caption">Figure 28. EFD clay intercalation thermograph.</div></div>
+      <div class="figure"><img src="https://i.postimg.cc/VL6tJtHN/image.png" alt="EFD clay thermograph"><div class="caption">Figure 29. EFD clay intercalation thermograph.</div></div>
+    </div>
+
+    <table>
+      <thead><tr><th>Technique</th><th>Main information obtained</th></tr></thead>
+      <tbody>
+        <tr><td>FTIR</td><td>Functional groups / chemical bonding</td></tr>
+        <tr><td>XRD</td><td>Crystal structure / phases / interlayer spacing</td></tr>
+        <tr><td>TEM</td><td>Nanoscale morphology</td></tr>
+        <tr><td>SEM</td><td>Surface morphology</td></tr>
+        <tr><td>TGA / TG</td><td>Mass change and thermal stability</td></tr>
+        <tr><td>DSC</td><td>Thermal transitions and heat-flow behaviour</td></tr>
+      </tbody>
+    </table>
+
+    <div class="quote">No single technique tells the whole story. Evidence gets stronger when chemical, structural, morphological and thermal information all point to the same conclusion.</div>
+  </div>
+</section>
+
+<!-- ================= FORMULATION ================= -->
+<section id="formulation">
+  <div class="wrap">
+    <div class="section-head"><span class="section-num">07</span><h2 class="section-title">Formulation Development</h2></div>
+    <p class="section-intro">The next natural step: moving from <em>testing</em> active materials to <em>applying</em> them in practical product systems. This required understanding ingredient compatibility, phase behaviour, emulsification, preservation and pH adjustment — formulation as an extension of chemistry.</p>
+
+    <div class="form-grid">
+      <article class="form-card">
+        <h3>Basil Scalp Spray</h3>
+        <div class="sub">Active: <em>Ocimum basilicum</em> ethanolic extract</div>
+        <p>Water-based spray with basil extract as the active ingredient. Prepared at 50 g batch size; extract incorporated at 10% w/w. Adjusted pH to 5.0–5.5 and filtered before filling.</p>
+        <ul>
+          <li>Deionised water (vehicle)</li>
+          <li>Basil ethanolic extract (active)</li>
+          <li>Glycerin (humectant)</li>
+          <li>Panthenol (hair conditioning)</li>
+          <li>Niacinamide (scalp barrier support)</li>
+          <li>Preservative, EDTA, pH adjuster</li>
+        </ul>
+        <div class="formula" style="margin-top:12px;">Basil leaves → extraction → concentrate → formulation → scalp spray</div>
+        <span class="status">Formulated &amp; evaluated</span>
+        <div class="figure small"><img src="https://i.postimg.cc/sfbXJ9Xy/20260824-101122.jpg" alt="Basil scalp spray formulation"><div class="caption">Figure 30. Basil scalp spray formulation.</div></div>
+        <p>After formulation, an antimicrobial experiment was conducted against <em>M. furfur</em> since this hair spray is intended to prevent dandruff. The results were active, consistent with the positive results obtained for basil leaves against this microorganism. The formulated spray prevented dandruff growth, as shown by the large zones in the agar plates compared with the control. A surfactant was used to enhance growth and diffusion of the sample to the plate.</p>
+        <div class="figure small"><img src="https://i.postimg.cc/qvsdy2tP/20260922-131807.jpg" alt="Formulated spray antimicrobial activity against M. furfur"><div class="caption">Figure 31. Formulated spray showing antimicrobial activity against <em>M. furfur</em>.</div></div>
+      </article>
+
+      <article class="form-card">
+        <h3>Basic Hair Wax with PLH</h3>
+        <div class="sub">Probiotic Lipid Hybrid · hair-strength study</div>
+        <p>PLH was incorporated into a Basic Hair Wax at 0%, 1%, 2.5% and 5% w/w levels, adjusting the mineral oil solvent to compensate. The formulation study connected material characterization with a practical cosmetic delivery system and an intended hair-strength function.</p>
+        <ul>
+          <li><b>Phase A:</b> Mineral oil (solvent, to 100%), Beeswax bleached (consistency factor, 8.0%), PEG-40 hydrogenated castor oil (emulsifier/wetting agent, 5.0%), PEG-60 almond glycerides (emulsifier/wetting agent, 3.0%), Glyceryl stearate (W/O emulsifier, 2.5%)</li>
+          <li><b>Phase B:</b> Purified water (solvent, 5.0%)</li>
+          <li><b>Phase C:</b> Basil extract 50% / PLH (active/advertising claims, 2.0%)</li>
+          <li><b>PLH loading:</b> 0% (control), 1%, 2.5%, 5% w/w, with mineral oil adjusted to 76.5%, 75.5%, 74% and 71.5% respectively</li>
+        </ul>
+        <div class="formula" style="margin-top:12px;">Lipid materials + beeswax + emulsifiers → heat to 80 °C → add water at 80 °C → cool below 60 °C → add basil extract / PLH → pour while molten</div>
+        <span class="status">Formulation study</span>
+        <div class="figure small"><img src="https://i.postimg.cc/L87Npswq/20261001-161347.jpg" alt="Basic Hair Wax formulation and method"><div class="caption">Figure 32. Basic Hair Wax formulation sheet and method.</div></div>
+      </article>
+
+      <article class="form-card">
+        <h3>Lipid ZnO Sunscreen</h3>
+        <div class="sub">Active: Lipid Zinc Oxide (20% w/w) · in progress</div>
+        <p>Three-phase emulsion: water phase, oil phase (containing ZnO) and cool-down phase. Demonstrated how functional materials are incorporated into stable, protective formulations.</p>
+        <ul>
+          <li><b>Water phase:</b> purified water, glycerol, aloesin, EDTA</li>
+          <li><b>Oil phase:</b> caprylic/capric triglyceride, coconut oil, shea butter, beeswax, Span 60, Lipid ZnO</li>
+          <li><b>Cool-down:</b> tocopheryl acetate, preservative</li>
+        </ul>
+        <div class="formula" style="margin-top:12px;">Lipid ZnO + oil/water emulsification → sunscreen formulation</div>
+        <span class="status">In progress</span>
+      </article>
+
+      <article class="form-card">
+        <h3>Firming Body Lotion</h3>
+        <div class="sub">Multi-active firming formulation</div>
+        <p>Provided experience in organising a formulation into phases and controlled combination of ingredients — water phase, oil phase and cool-down phase with active ingredients.</p>
+        <ul>
+          <li>Emulsifier system</li>
+          <li>Humectants and emollients</li>
+          <li>Active firming ingredients</li>
+          <li>Preservation system</li>
+        </ul>
+        <div class="figure small"><img src="https://i.postimg.cc/T2K1mHTB/20260824-101158.jpg" alt="Firming body lotion formulation"><div class="caption">Figure 33. Firming body lotion formulation.</div></div>
+      </article>
+
+      <article class="form-card">
+        <h3>Ceramide Moisture Repair</h3>
+        <div class="sub">Barrier-supporting formulation</div>
+        <p>Introduced controlled heating, phase preparation, emulsification and cool-down ingredient incorporation — with ceramide and other moisturising/barrier-supporting ingredients.</p>
+        <ul>
+          <li>Water phase &amp; oil phase</li>
+          <li>Ceramide complex</li>
+          <li>Moisturising agents</li>
+          <li>Cool-down phase additives</li>
+        </ul>
+        <div class="figure small"><img src="https://i.postimg.cc/L4J5f0mT/20260824-101201.jpg" alt="Ceramide moisture repair formulation"><div class="caption">Figure 34. Ceramide moisture repair formulation.</div></div>
+      </article>
+
+      <article class="form-card">
+        <h3>Formulation Testing</h3>
+        <div class="sub">Basil extract enhancement of a Deep Cleanser, Gentle Cleanser and Serum for anti-acne activity</div>
+        <p>Three existing oily-skin formulations were selected for testing. The Deep Cleanser already contained an anti-acne active ingredient, the Gentle Cleanser was an oily-skin formulation without an anti-acne active, and the Serum was an oily-skin product with no anti-acne claim. Basil extract was introduced to each to investigate whether it could enhance, maintain or introduce anti-acne activity.</p>
+
+        <h4 style="margin-top:16px;font-size:1rem;">Testing plan</h4>
+        <ul>
+          <li><b>Deep Cleanser + Basil extract:</b> aim to enhance the existing anti-acne activity.</li>
+          <li><b>Gentle Cleanser + Basil extract:</b> monitor the performance of anti-acne activity.</li>
+          <li><b>Serum + Basil extract:</b> introduce anti-acne activity.</li>
+        </ul>
+
+        <h4 style="margin-top:16px;font-size:1rem;">Controls</h4>
+        <ul>
+          <li><b>Deep Cleanser (no basil):</b> compare anti-acne activity against the basil-containing version.</li>
+          <li><b>Gentle Cleanser (no basil):</b> compare anti-acne activity against the basil-containing version.</li>
+          <li><b>Serum (no basil):</b> compare anti-acne activity against the basil-containing version.</li>
+        </ul>
+
+        <div class="figure small">
+          <img src="https://i.postimg.cc/wvY21G95/20261001-161222.jpg" alt="Prepared samples for antimicrobial testing">
+          <div class="caption">Figure 35. Prepared samples for antimicrobial testing.</div>
+        </div>
+        <span class="status">Testing in progress</span>
+      </article>
+    </div>
+
+    <div class="quote">The biological and materials work fed directly into these formulations — the basil extract had already been tested for antimicrobial and antioxidant activity before it became a scalp spray; the Lipid ZnO was characterised and evaluated before it was used in the sunscreen. Each formulation was a practical answer to the question: <em>how can this material be incorporated into a stable, functional product?</em></div>
+  </div>
+</section>
+
+<!-- ================= REFLECTION ================= -->
+<section id="reflection">
+  <div class="wrap">
+    <div class="section-head"><span class="section-num">08</span><h2 class="section-title">Reflection: A Chain of Evidence</h2></div>
+    <p class="section-intro">The biggest shift over the internship was moving from <em>how to perform an experiment</em> to <em>why it's being performed and what the result means</em>. Rotary evaporation stopped being just a technique once it came with the questions: why concentrate this extract, what will it be used for, how might concentration affect the assay? FTIR and XRD raised the same kind of question — what should the spectrum or pattern show, and does it actually support a real modification?</p>
+
+    <div class="card-grid">
+      <article class="card">
+        <h3>Biological chain</h3>
+        <ol style="margin:10px 0 0 18px;color:var(--ink-soft);font-size:.89rem;line-height:1.9;">
+          <li>Plant material</li>
+          <li>Extraction</li>
+          <li>Concentrated extract</li>
+          <li>MIC / antioxidant / enzyme assays</li>
+          <li>Absorbance measurements</li>
+          <li>Data processing</li>
+          <li>Biological interpretation</li>
+        </ol>
+      </article>
+      <article class="card">
+        <h3>Materials &amp; formulation chain</h3>
+        <ol style="margin:10px 0 0 18px;color:var(--ink-soft);font-size:.89rem;line-height:1.9;">
+          <li>Material / extract</li>
+          <li>Modification / characterization</li>
+          <li>XRD / FTIR / TEM / SEM / thermal analysis</li>
+          <li>Structural &amp; chemical confirmation</li>
+          <li>Formulation development</li>
+          <li>Stability &amp; functionality testing</li>
+          <li>Practical application</li>
+        </ol>
+      </article>
+    </div>
+
+    <p class="section-intro" style="margin-top:24px;">The degree fed directly into this work: <b>analytical chemistry</b> in standards, dilutions and spectral interpretation; <b>organic chemistry</b> in extraction, solvents and functional groups; <b>physical chemistry</b> in diffusion, solubility, spectroscopy and thermodynamics; <b>inorganic and materials chemistry</b> in the clay and intercalation work. In practice, these branches stopped being separate subjects and started overlapping to solve one problem at a time.</p>
+
+    <div class="verdict">
+      <h3>Current capability profile</h3>
+      <p><b>Chemistry:</b> plant extraction, solvent handling, concentration, functional-group interpretation and sample preparation.</p>
+      <p><b>Microbiology:</b> aseptic workflow, microbial suspension preparation, agar diffusion, broth dilution and MIC analysis.</p>
+      <p><b>Biological assays:</b> DPPH antioxidant, anti-tyrosinase and anti-elastase workflows with appropriate controls and spectrophotometric measurement.</p>
+      <p><b>Materials:</b> practical exposure to FTIR, XRD, TEM, SEM, TGA/TG and DSC and interpretation of complementary evidence.</p>
+      <p><b>Cosmetic technology:</b> phase organisation, emulsification, active incorporation, pH adjustment, preservation considerations and application-focused evaluation.</p>
+    </div>
+
+    <div class="quote">Laboratory research isn't a set of individual experiments — each stage produces evidence that feeds the next, until enough of it points the same way to support a real conclusion.</div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-box">
+      <div class="pipeline">
+        Prepare <span class="arrow">→</span> Extract <span class="arrow">→</span> Process <span class="arrow">→</span> Screen <span class="arrow">→</span> Quantify <span class="arrow">→</span> Characterize <span class="arrow">→</span> Formulate <span class="arrow">→</span> Evaluate
+      </div>
+      <div class="footer-meta">
+        Council for Scientific and Industrial Research (CSIR)<br>
+        Centre for Nanostructures and Advanced Materials (CeNAM)<br>
+        Cosmetic Laboratory Technology Internship · Research Portfolio<br><br>
+        Prepared as a professional record of laboratory activities, methods, observations and research development.
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var modal   = document.getElementById('disclaimerModal');
+  var agree   = document.getElementById('agreeBtn');
+  var decline = document.getElementById('declineBtn');
+  var KEY     = 'csir_portfolio_disclaimer_agreed';
+
+  var alreadyAgreed = false;
+  try { alreadyAgreed = sessionStorage.getItem(KEY) === 'true'; } catch (e) {}
+
+  if (!alreadyAgreed) {
+    modal.classList.add('active');
+    document.body.classList.add('modal-open');
+  }
+
+  function closeModal() {
+    modal.classList.remove('active');
+    document.body.classList.remove('modal-open');
+  }
+
+  agree.addEventListener('click', function () {
+    try { sessionStorage.setItem(KEY, 'true'); } catch (e) {}
+    closeModal();
+  });
+
+  decline.addEventListener('click', function () {
+    if (document.referrer) {
+      window.location.href = document.referrer;
+    } else if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      document.body.innerHTML =
+        '<div style="font-family:sans-serif;padding:60px;text-align:center;color:#53665e;">' +
+        '<h2 style="font-family:Georgia,serif;color:#172821;">Access declined</h2>' +
+        '<p style="margin-top:12px;">You have chosen not to accept the CSIR content disclaimer for this portfolio.</p>' +
+        '</div>';
+      document.body.classList.remove('modal-open');
+    }
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && modal.classList.contains('active')) {
+      decline.click();
+    }
+  });
+
+  if (!alreadyAgreed) {
+    setTimeout(function () { agree.focus(); }, 60);
+  }
+})();
+</script>
+<script src="track.js"></script>
+</body>
+</html>

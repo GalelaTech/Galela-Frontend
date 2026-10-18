@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Chemistry Internship at CSIR · CeNAM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EEF2EE;
+    --paper-deep:#E1E9E2;
+    --panel:#F8FAF8;
+    --ink:#16231F;
+    --ink-soft:#4E635C;
+    --ink-faint:#7E8F88;
+    --line:#C7D2C8;
+    --cobalt:#2B4C82;
+    --cobalt-soft:#5D75A0;
+    --violet:#6C4092;
+    --amber:#DE9F3B;
+    --clay:#A85F35;
+    --radius:10px;
+    --maxw:920px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  h1,h2,h3,h4{
+    font-family:'IBM Plex Serif', serif;
+    font-weight:600;
+    color:var(--ink);
+    margin:0;
+    letter-spacing:-0.01em;
+  }
+
+  .mono{
+    font-family:'IBM Plex Mono', monospace;
+  }
+
+  a{color:var(--cobalt);}
+
+  .wrap{
+    max-width:var(--maxw);
+    margin:0 auto;
+    padding:0 28px;
+  }
+
+  /* ---------- NAV ---------- */
+  nav.top{
+    position:sticky; top:0; z-index:50;
+    background:rgba(238,242,238,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  nav.top .inner{
+    max-width:var(--maxw);
+    margin:0 auto;
+    padding:12px 28px;
+    display:flex;
+    gap:22px;
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  nav.top .inner::-webkit-scrollbar{display:none;}
+  nav.top a{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.72rem;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    text-decoration:none;
+    white-space:nowrap;
+    padding-bottom:2px;
+    border-bottom:1px solid transparent;
+    transition:color .15s, border-color .15s;
+  }
+  nav.top a:hover{ color:var(--cobalt); border-color:var(--cobalt-soft); }
+
+  /* ---------- READOUT (recurring transformation motif) ---------- */
+  .readout{
+    margin:34px 0 14px 0;
+  }
+  .readout .bar{
+    position:relative;
+    height:7px;
+    border-radius:99px;
+    background:linear-gradient(90deg, var(--violet) 0%, var(--amber) 100%);
+    overflow:hidden;
+  }
+  .readout .bar::after{
+    content:"";
+    position:absolute; top:0; bottom:0; left:0;
+    width:14px; border-radius:99px;
+    background:rgba(255,255,255,0.85);
+    filter:blur(2px);
+    animation:sweep 5.5s ease-in-out infinite;
+  }
+  @keyframes sweep{
+    0%{ left:-14px; }
+    45%{ left:calc(100% - 4px); }
+    50%{ left:calc(100% - 4px); }
+    95%{ left:-14px; }
+    100%{ left:-14px; }
+  }
+  .readout .labels{
+    display:flex; justify-content:space-between;
+    margin-top:8px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.72rem;
+    color:var(--ink-faint);
+  }
+  .readout .labels b{ color:var(--ink-soft); font-weight:500; }
+
+  /* ---------- HERO ---------- */
+  header.hero{
+    padding:76px 0 20px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.78rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--cobalt);
+    margin-bottom:18px;
+  }
+  h1.title{
+    font-size:clamp(2.3rem, 5.2vw, 3.6rem);
+    line-height:1.08;
+    max-width:14ch;
+  }
+  .hero p.lede{
+    margin-top:22px;
+    max-width:62ch;
+    font-size:1.08rem;
+    color:var(--ink-soft);
+  }
+  .pipeline-string{
+    margin-top:30px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.82rem;
+    color:var(--ink-soft);
+    line-height:1.9;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:16px 18px;
+  }
+  .pipeline-string .arrow{ color:var(--cobalt-soft); }
+
+  /* ---------- SECTIONS ---------- */
+  section{
+    padding:64px 0;
+    border-bottom:1px solid var(--line);
+  }
+  section:last-of-type{ border-bottom:none; }
+
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    margin-bottom:8px;
+  }
+  .section-num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.85rem;
+    color:var(--cobalt-soft);
+  }
+  h2.section-title{ font-size:clamp(1.5rem, 3vw, 2rem); }
+  .section-intro{
+    color:var(--ink-soft);
+    max-width:64ch;
+    margin-top:14px;
+  }
+
+  /* ---------- WORKFLOW TIMELINE ---------- */
+  .timeline{
+    margin-top:36px;
+    display:flex;
+    flex-direction:column;
+  }
+  .stage{
+    display:grid;
+    grid-template-columns:52px 1fr;
+    gap:20px;
+    position:relative;
+    padding-bottom:30px;
+  }
+  .stage:last-child{ padding-bottom:0; }
+  .stage .rail{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  .stage .dot{
+    width:38px; height:38px;
+    border-radius:50%;
+    background:var(--panel);
+    border:1.5px solid var(--cobalt-soft);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.72rem;
+    color:var(--cobalt);
+    flex-shrink:0;
+  }
+  .stage .line{
+    flex:1;
+    width:1px;
+    background:var(--line);
+    margin-top:4px;
+  }
+  .stage:last-child .line{ display:none; }
+  .stage .content{ padding-top:4px; }
+  .stage h3{ font-size:1.08rem; margin-bottom:5px; }
+  .stage .objective{
+    font-size:0.92rem;
+    color:var(--ink-soft);
+  }
+  .stage .objective b{ color:var(--ink); font-weight:600; }
+
+  /* ---------- CARD GRID ---------- */
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:16px;
+    margin-top:32px;
+  }
+  @media (max-width:640px){ .grid{ grid-template-columns:1fr; } }
+
+  .card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:20px 22px;
+  }
+  .card h4{
+    font-size:1.02rem;
+    margin-bottom:8px;
+  }
+  .card p{
+    margin:0;
+    font-size:0.92rem;
+    color:var(--ink-soft);
+  }
+  .card .formula{
+    margin-top:12px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.78rem;
+    color:var(--cobalt);
+    background:var(--paper-deep);
+    border-radius:6px;
+    padding:9px 11px;
+    line-height:1.6;
+  }
+
+  /* ---------- LISTS ---------- */
+  ul.plain{
+    margin:16px 0 0 0;
+    padding:0;
+    list-style:none;
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:8px 20px;
+  }
+  @media (max-width:640px){ ul.plain{ grid-template-columns:1fr; } }
+  ul.plain li{
+    font-size:0.92rem;
+    color:var(--ink-soft);
+    padding-left:16px;
+    position:relative;
+  }
+  ul.plain li::before{
+    content:"";
+    position:absolute; left:0; top:0.62em;
+    width:6px; height:1px;
+    background:var(--cobalt-soft);
+  }
+
+  /* ---------- TAGS (organisms) ---------- */
+  .tags{
+    display:flex; flex-wrap:wrap; gap:8px;
+    margin-top:16px;
+  }
+  .tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-style:italic;
+    font-size:0.82rem;
+    color:var(--ink);
+    background:var(--panel);
+    border:1px solid var(--line);
+    padding:6px 12px;
+    border-radius:99px;
+  }
+
+  /* ---------- CLAY LAYER DIAGRAM ---------- */
+  .clay-block{
+    margin-top:34px;
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:16px;
+  }
+  @media (max-width:720px){ .clay-block{ grid-template-columns:repeat(2, 1fr);} }
+  .clay-sample{
+    text-align:center;
+  }
+  .clay-sample .stack{
+    display:flex; flex-direction:column; gap:4px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:10px;
+    background:var(--panel);
+  }
+  .layer{
+    height:12px;
+    border-radius:2px;
+    background:var(--clay);
+    opacity:0.85;
+  }
+  .organic{
+    height:12px;
+    border-radius:2px;
+    background:var(--amber);
+  }
+  .clay-sample .cap{
+    margin-top:10px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.75rem;
+    color:var(--ink-soft);
+  }
+
+  /* ---------- DATA CALLOUT (FTIR params) ---------- */
+  .data-callout{
+    margin-top:20px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+  }
+  .datum{
+    background:var(--paper-deep);
+    border-radius:8px;
+    padding:12px 16px;
+    min-width:140px;
+  }
+  .datum .k{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.68rem;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--ink-faint);
+  }
+  .datum .v{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:1rem;
+    color:var(--cobalt);
+    margin-top:4px;
+  }
+
+  /* ---------- TABLE ---------- */
+  table.tech{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:28px;
+    font-size:0.9rem;
+  }
+  table.tech th{
+    text-align:left;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.72rem;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    color:var(--ink-faint);
+    padding:10px 14px;
+    border-bottom:1px solid var(--line);
+  }
+  table.tech td{
+    padding:12px 14px;
+    border-bottom:1px solid var(--line);
+    color:var(--ink-soft);
+    vertical-align:top;
+  }
+  table.tech td.name{
+    color:var(--ink);
+    font-weight:600;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.85rem;
+    white-space:nowrap;
+  }
+
+  /* ---------- DEGREE CONNECTION ---------- */
+  .connect-grid{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:14px;
+    margin-top:30px;
+  }
+  @media (max-width:820px){ .connect-grid{ grid-template-columns:repeat(2, 1fr);} }
+  @media (max-width:480px){ .connect-grid{ grid-template-columns:1fr;} }
+  .connect-card{
+    border-top:2px solid var(--cobalt-soft);
+    padding-top:12px;
+  }
+  .connect-card h4{
+    font-size:0.9rem;
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:600;
+    color:var(--cobalt);
+    text-transform:uppercase;
+    letter-spacing:0.02em;
+  }
+  .connect-card p{
+    margin-top:8px;
+    font-size:0.86rem;
+    color:var(--ink-soft);
+  }
+
+  /* ---------- CHAIN (reflection) ---------- */
+  .chains{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:24px;
+    margin-top:32px;
+  }
+  @media (max-width:720px){ .chains{ grid-template-columns:1fr; } }
+  .chain{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:22px 24px;
+  }
+  .chain .chain-title{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.72rem;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    color:var(--ink-faint);
+    margin-bottom:14px;
+  }
+  .chain ol{
+    margin:0; padding-left:18px;
+    font-size:0.9rem;
+    color:var(--ink-soft);
+  }
+  .chain ol li{ margin-bottom:8px; }
+  .chain ol li:last-child{ margin-bottom:0; color:var(--ink); font-weight:500; }
+
+  blockquote.lesson{
+    margin:34px 0 0 0;
+    padding:22px 26px;
+    border-left:3px solid var(--violet);
+    background:var(--panel);
+    border-radius:0 var(--radius) var(--radius) 0;
+    font-family:'IBM Plex Serif', serif;
+    font-size:1.15rem;
+    line-height:1.55;
+    color:var(--ink);
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    padding:48px 0 70px 0;
+  }
+  footer .pipeline-string{ margin-bottom:24px; }
+  footer .meta{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.76rem;
+    color:var(--ink-faint);
+    line-height:1.8;
+  }
+
+  p{ margin:0 0 0 0; }
+  .stack-v > * + *{ margin-top:14px; }
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="inner">
+    <a href="#overview">Overview</a>
+    <a href="#workflow">Workflow</a>
+    <a href="#chemistry">Chemistry &amp; Extraction</a>
+    <a href="#microbiology">Microbiology &amp; Bioassays</a>
+    <a href="#materials">Materials Characterization</a>
+    <a href="#skills">Skills &amp; Practice</a>
+    <a href="#reflection">Reflection</a>
+  </div>
+</nav>
+
+<header class="hero wrap" id="overview">
+  <div class="eyebrow">CSIR — Centre for Nanostructures and Advanced Materials (CeNAM)</div>
+  <h1 class="title">A Chemistry Internship, From Bench to Beam</h1>
+  <p class="lede">
+    A record of laboratory work spanning sample preparation, plant extraction, microbiological
+    testing, biological activity assays, and material characterization — and of learning how
+    these stages connect into a single chain of evidence, not a set of unrelated techniques.
+  </p>
+
+  <div class="readout">
+    <div class="bar"></div>
+    <div class="labels"><span><b>prepared sample</b></span><span><b>interpreted result</b></span></div>
+  </div>
+
+  <div class="pipeline-string">
+    Sample preparation <span class="arrow">→</span> Extraction <span class="arrow">→</span> Extract processing <span class="arrow">→</span>
+    Microbiological testing <span class="arrow">→</span> Biological activity evaluation <span class="arrow">→</span>
+    Material preparation <span class="arrow">→</span> Characterization <span class="arrow">→</span> Interpretation of results
+  </div>
+</header>
+
+<!-- ============ WORKFLOW ============ -->
+<section id="workflow">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-num">01</span>
+      <h2 class="section-title">The Eight Stages</h2>
+    </div>
+    <p class="section-intro">
+      Looking back, the internship followed a clear progression — each stage answering a question
+      the previous one raised, and setting up the one that followed.
+    </p>
+
+    <div class="timeline">
+      <div class="stage">
+        <div class="rail"><div class="dot">01</div><div class="line"></div></div>
+        <div class="content"><h3>Chemistry &amp; Sample Preparation</h3>
+          <p class="objective"><b>Objective —</b> prepare a reliable sample for further investigation.</p></div>
+      </div>
+      <div class="stage">
+        <div class="rail"><div class="dot">02</div><div class="line"></div></div>
+        <div class="content"><h3>Extraction</h3>
+          <p class="objective"><b>Objective —</b> transfer chemical constituents from the plant matrix into a suitable solvent.</p></div>
+      </div>
+      <div class="stage">
+        <div class="rail"><div class="dot">03</div><div class="line"></div></div>
+        <div class="content"><h3>Extract Processing</h3>
+          <p class="objective"><b>Objective —</b> filter and concentrate the extract into a sample suitable for testing.</p></div>
+      </div>
+      <div class="stage">
+        <div class="rail"><div class="dot">04</div><div class="line"></div></div>
+        <div class="content"><h3>Microbiology</h3>
+          <p class="objective"><b>Objective —</b> establish reliable, controlled biological systems for testing.</p></div>
+      </div>
+      <div class="stage">
+        <div class="rail"><div class="dot">05</div><div class="line"></div></div>
+        <div class="content"><h3>Biological Activity Assays</h3>
+          <p class="objective"><b>Objective —</b> determine whether prepared samples show antimicrobial, enzyme-inhibitory, or antioxidant activity.</p></div>
+      </div>
+      <div class="stage">
+        <div class="rail"><div class="dot">06</div><div class="line"></div></div>
+        <div class="content"><h3>Data Analysis</h3>
+          <p class="objective"><b>Objective —</b> convert raw absorbance readings into scientifically meaningful results.</p></div>
+      </div>
+      <div class="stage">
+        <div class="rail"><div class="dot">07</div><div class="line"></div></div>
+        <div class="content"><h3>Material Characterization</h3>
+          <p class="objective"><b>Objective —</b> determine chemical, structural, morphological, and thermal properties.</p></div>
+      </div>
+      <div class="stage">
+        <div class="rail"><div class="dot">08</div></div>
+        <div class="content"><h3>Scientific Interpretation</h3>
+          <p class="objective"><b>Objective —</b> decide whether the intended modification or activity actually occurred.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CHEMISTRY & EXTRACTION ============ -->
+<section id="chemistry">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Chemistry &amp; Extraction</h2>
+    </div>
+    <p class="section-intro">
+      Everything downstream depended on this stage: accurate mass and volume measurements, correct
+      solvent selection, sample homogeneity, filtration, labelling, and contamination prevention.
+      A poorly prepared sample makes even a correctly operating instrument produce unreliable data —
+      a lesson that became especially clear once extracts moved on to biological testing.
+    </p>
+
+    <p class="section-intro" style="margin-top:28px;">
+      The main extraction work was on <em>Ocimum basilicum</em> (basil) leaves, aiming to transfer
+      potentially bioactive compounds into a solvent for concentration and testing. Four extraction
+      techniques were used, each differing in how the solvent meets the plant matrix and how energy
+      is supplied to the process.
+    </p>
+
+    <div class="grid">
+      <div class="card">
+        <h4>Maceration</h4>
+        <p>Plant material stands in solvent with occasional agitation; compounds diffuse in on their own, driven by a solubility and concentration gradient. No heating required, but slower than energy-assisted methods.</p>
+        <div class="formula">plant material + solvent → diffusion of soluble compounds → extract</div>
+      </div>
+      <div class="card">
+        <h4>Reflux Extraction</h4>
+        <p>Plant material is heated in solvent under a condenser, so evaporated solvent returns to the vessel instead of being lost. Heat speeds extraction, but temperature has to be controlled — some compounds are heat-sensitive.</p>
+        <div class="formula">heating → evaporation → condensation → return → continuous extraction</div>
+      </div>
+      <div class="card">
+        <h4>Infusion</h4>
+        <p>A simpler, controlled-temperature contact between plant material and solvent for a set time — the same principle behind herbal extracts. Solvent, temperature, and time together set the extraction efficiency.</p>
+        <div class="formula">solvent + temperature + time + plant material = extraction efficiency</div>
+      </div>
+      <div class="card">
+        <h4>Ultrasonic-Assisted Extraction</h4>
+        <p>Ultrasonic energy disrupts plant structures and improves solvent penetration, increasing compound release. It illustrates that extraction methods differ not just by solvent, but by the mechanism used to enhance mass transfer.</p>
+        <div class="formula">ultrasonic energy → structural disruption → improved mass transfer</div>
+      </div>
+    </div>
+
+    <div class="readout">
+      <div class="bar"></div>
+      <div class="labels"><span><b>raw extract</b></span><span><b>concentrated, testable extract</b></span></div>
+    </div>
+
+    <div class="grid" style="margin-top:8px;">
+      <div class="card">
+        <h4>Vacuum Filtration</h4>
+        <p>Reduced pressure pulls the liquid extract through a filtration medium, separating it from solid plant residue. The lesson here: extraction isn't finished when a compound enters the solvent — the extract still has to be processed before it's useful.</p>
+      </div>
+      <div class="card">
+        <h4>Rotary Evaporation</h4>
+        <p>Reduced pressure plus rotation and controlled heating lower the solvent's effective boiling point, concentrating the extract efficiently. Skills built: rig set-up, temperature selection, monitoring solvent removal, and preventing sample loss.</p>
+        <div class="formula">extract → reduced pressure + heat + rotation → solvent removal → concentrated extract</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MICROBIOLOGY & BIOASSAYS ============ -->
+<section id="microbiology">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Microbiology &amp; Bioassays</h2>
+    </div>
+    <p class="section-intro">
+      Extraction naturally led into microbiology: <em>first prepare the chemical sample, then
+      investigate what biological effect it produces.</em> That meant preparing culture media —
+      measuring, dissolving, sterilizing, and dispensing under aseptic conditions — before any
+      organism could be reliably tested against.
+    </p>
+
+    <div class="tags">
+      <span class="tag">Pseudomonas aeruginosa</span>
+      <span class="tag">Malassezia furfur</span>
+      <span class="tag">Candida</span>
+      <span class="tag">Staphylococcus aureus</span>
+      <span class="tag">Escherichia coli</span>
+    </div>
+
+    <p class="section-intro" style="margin-top:26px;">
+      <b style="color:var(--ink);">Minimum Inhibitory Concentration (MIC) testing</b>, run by broth
+      dilution, found the lowest concentration of a test substance that stopped visible microbial
+      growth. Lower concentrations gave microorganisms more room to grow; higher concentrations
+      increased the antimicrobial effect, until growth was visibly inhibited.
+    </p>
+
+    <ul class="plain">
+      <li>Micropipette operation</li>
+      <li>Serial dilution</li>
+      <li>Final concentration calculations</li>
+      <li>Replicate measurements</li>
+      <li>Positive &amp; negative controls</li>
+      <li>Blank correction</li>
+      <li>Absorbance measurements</li>
+      <li>Data recording</li>
+    </ul>
+
+    <p class="section-intro" style="margin-top:30px;">
+      This 96-well microplate format carried over directly into three biological-activity assays —
+      each following the same underlying pattern: an enzyme or radical reacts with a substrate to
+      give a measurable signal, and an active sample reduces that signal.
+    </p>
+
+    <div class="grid">
+      <div class="card">
+        <h4>Anti-Tyrosinase Assay</h4>
+        <p>L-DOPA-based method. Tyrosinase acts on its substrate to form a coloured product, monitored spectrophotometrically; an inhibitor lowers the signal relative to the control.</p>
+        <div class="formula">tyrosinase + L-DOPA → coloured product</div>
+      </div>
+      <div class="card">
+        <h4>Elastase Inhibition Assay</h4>
+        <p>Elastase breaks down elastin-related substrates — relevant to cosmetic and skin research. Inhibition is calculated from the difference between control and sample response.</p>
+        <div class="formula">enzyme + substrate + inhibitor → reduced reaction</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <h4>DPPH Antioxidant Assay</h4>
+      <p>DPPH is a stable, coloured radical. An antioxidant reduces it, and the colour fades — a decrease in absorbance used to estimate antioxidant activity. Work here included preparing the DPPH reagent, dissolving samples in ethanol, and running ascorbic acid as a reference standard.</p>
+      <div class="formula">DPPH radical + antioxidant → reduced DPPH → decrease in absorbance</div>
+      <div class="readout" style="margin-top:16px;">
+        <div class="bar"></div>
+        <div class="labels"><span><b>DPPH radical (violet)</b></span><span><b>reduced DPPH (pale)</b></span></div>
+      </div>
+    </div>
+
+    <blockquote class="lesson" style="margin-top:36px;">
+      An instrument reading is never automatically the final result. Sample, solvent, reagent, and
+      plate background all contribute to the signal — so every value moved through correction and
+      calculation before it became a graph, and only then an interpretation.
+    </blockquote>
+  </div>
+</section>
+
+<!-- ============ MATERIALS CHARACTERIZATION ============ -->
+<section id="materials">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Material Characterization</h2>
+    </div>
+    <p class="section-intro">
+      Here the guiding question changed. In extraction and microbiology it was <em>what compounds
+      can be extracted, and what biological activity do they produce?</em> In characterization it
+      became <em>what is the structure, composition, morphology, and thermal behaviour of this
+      material — and did the intended modification actually happen?</em>
+    </p>
+
+    <p class="section-intro" style="margin-top:22px;">
+      <b style="color:var(--ink);">XRD and the EFD clay intercalation study.</b> Intercalation means
+      introducing molecules between the layers of a layered material. Four EFD clay samples — pure,
+      and organically intercalated at 9%, 15%, and 35% — were compared by X-ray diffraction to look
+      for the layer-spacing changes that intercalation should produce.
+    </p>
+
+    <div class="clay-block">
+      <div class="clay-sample">
+        <div class="stack"><div class="layer"></div><div class="layer"></div><div class="layer"></div></div>
+        <div class="cap">Pure EFD clay</div>
+      </div>
+      <div class="clay-sample">
+        <div class="stack"><div class="layer"></div><div class="organic" style="opacity:0.5;"></div><div class="layer"></div></div>
+        <div class="cap">9% intercalation</div>
+      </div>
+      <div class="clay-sample">
+        <div class="stack"><div class="layer"></div><div class="organic" style="opacity:0.75;"></div><div class="layer"></div></div>
+        <div class="cap">15% intercalation</div>
+      </div>
+      <div class="clay-sample">
+        <div class="stack"><div class="layer"></div><div class="organic"></div><div class="layer"></div></div>
+        <div class="cap">35% intercalation</div>
+      </div>
+    </div>
+    <p class="section-intro" style="margin-top:18px; font-size:0.86rem;">
+      A real structural modification should leave measurable evidence — the core principle behind
+      choosing XRD for this study.
+    </p>
+
+    <p class="section-intro" style="margin-top:36px;">
+      <b style="color:var(--ink);">FTIR</b> reads the chemical bonds and functional groups in a
+      sample as a kind of fingerprint. It was run on materials including a Probiotic Lipid Hybrid
+      (PLH) sample, under these parameters:
+    </p>
+    <div class="data-callout">
+      <div class="datum"><div class="k">Range</div><div class="v">4000–700 cm⁻¹</div></div>
+      <div class="datum"><div class="k">Resolution</div><div class="v">4 cm⁻¹</div></div>
+      <div class="datum"><div class="k">Scans</div><div class="v">8 runs</div></div>
+    </div>
+    <p class="section-intro" style="margin-top:18px;">
+      Interpreting a spectrum meant relating bands — O–H, C–H, C=O, C–O, and others — back to the
+      material's expected composition: new peaks, shifts, or intensity changes as evidence that a
+      modification had actually occurred.
+    </p>
+
+    <p class="section-intro" style="margin-top:30px;">
+      <b style="color:var(--ink);">TEM sample preparation</b> required dispersing the material and
+      breaking up agglomeration with ultrasonication — because a poor dispersion makes it impossible
+      to get representative images of nanoscale structure. The same lesson from extraction and
+      microbiology reappeared here: good analysis begins with good sample preparation.
+    </p>
+
+    <table class="tech">
+      <tr><th>Technique</th><th>Main information obtained</th></tr>
+      <tr><td class="name">FTIR</td><td>Functional groups / chemical bonding</td></tr>
+      <tr><td class="name">XRD</td><td>Crystal structure / phases / interlayer spacing</td></tr>
+      <tr><td class="name">TEM</td><td>Nanoscale morphology</td></tr>
+      <tr><td class="name">SEM</td><td>Surface morphology</td></tr>
+      <tr><td class="name">TGA / TG</td><td>Mass change and thermal stability</td></tr>
+      <tr><td class="name">DSC</td><td>Thermal transitions and heat-flow behaviour</td></tr>
+    </table>
+
+    <blockquote class="lesson">
+      No single technique tells the whole story. Evidence gets stronger when chemical, structural,
+      morphological, and thermal information all point to the same conclusion.
+    </blockquote>
+  </div>
+</section>
+
+<!-- ============ SKILLS & PRACTICE ============ -->
+<section id="skills">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-num">05</span>
+      <h2 class="section-title">Skills &amp; Laboratory Practice</h2>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h4>Sample Preparation</h4>
+        <p>Accurate weighing, volume measurement, dissolution, dispersion, dilution, filtration, concentration, labelling and storage.</p>
+      </div>
+      <div class="card">
+        <h4>Chemical Techniques</h4>
+        <p>Maceration, reflux, infusion, ultrasonic extraction, vacuum filtration, rotary evaporation.</p>
+      </div>
+      <div class="card">
+        <h4>Microbiology</h4>
+        <p>Culture media preparation, sterilization, aseptic handling, microorganism cultivation, MIC testing, microplate preparation.</p>
+      </div>
+      <div class="card">
+        <h4>Biological Assays</h4>
+        <p>DPPH antioxidant assay, anti-tyrosinase assay, elastase inhibition assay, MIC assay.</p>
+      </div>
+      <div class="card" style="grid-column: span 2;">
+        <h4>Characterization</h4>
+        <p>FTIR, XRD, TEM, SEM, TGA/TG, DSC — plus the sample preparation each technique demands.</p>
+      </div>
+    </div>
+
+    <p class="section-intro" style="margin-top:36px;">
+      Operating equipment responsibly meant working from established procedure rather than
+      assumption: checking equipment before use, following the relevant SOP, preparing samples
+      correctly, selecting appropriate parameters, recording conditions, monitoring during
+      operation, cleaning afterward, and reporting anything abnormal.
+    </p>
+
+    <p class="section-intro" style="margin-top:20px;">
+      Safety ran through every stage rather than sitting at the end of it — chemical handling and
+      solvents during extraction, contamination control during microbiology, correct procedure
+      around every piece of analytical equipment during characterization. PPE, biological and
+      chemical safety, waste disposal, and Good Laboratory Practice were constants, not
+      afterthoughts.
+    </p>
+  </div>
+</section>
+
+<!-- ============ REFLECTION ============ -->
+<section id="reflection">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-num">06</span>
+      <h2 class="section-title">Reflection: A Chain of Evidence</h2>
+    </div>
+    <p class="section-intro">
+      The biggest shift over the internship was moving from <em>how to perform an experiment</em>
+      to <em>why it's being performed and what the result means</em>. Rotary evaporation stopped
+      being just a technique once it came with the questions: why concentrate this extract, what
+      will it be used for, how might concentration affect the assay? FTIR and XRD raised the same
+      kind of question — what should the spectrum or pattern show, and does it actually support a
+      real modification?
+    </p>
+
+    <div class="chains">
+      <div class="chain">
+        <div class="chain-title">Biological Chain</div>
+        <ol>
+          <li>Plant material</li>
+          <li>Extraction</li>
+          <li>Concentrated extract</li>
+          <li>MIC / antioxidant / enzyme assays</li>
+          <li>Absorbance measurements</li>
+          <li>Data processing</li>
+          <li>Biological interpretation</li>
+        </ol>
+      </div>
+      <div class="chain">
+        <div class="chain-title">Materials Chain</div>
+        <ol>
+          <li>Material</li>
+          <li>Modification / intercalation</li>
+          <li>Sample preparation</li>
+          <li>XRD / FTIR / TEM / SEM / thermal analysis</li>
+          <li>Structural &amp; chemical information</li>
+          <li>Determination of whether the modification occurred</li>
+        </ol>
+      </div>
+    </div>
+
+    <p class="section-intro" style="margin-top:34px;">
+      The degree fed directly into this work: <b style="color:var(--ink);">analytical chemistry</b>
+      in standards, dilutions and spectral interpretation; <b style="color:var(--ink);">organic
+      chemistry</b> in extraction, solvents and functional groups; <b style="color:var(--ink);">physical
+      chemistry</b> in diffusion, solubility, spectroscopy and thermodynamics; <b style="color:var(--ink);">inorganic
+      and materials chemistry</b> in the clay and intercalation work. In practice, these branches
+      stopped being separate subjects and started overlapping to solve one problem at a time.
+    </p>
+
+    <blockquote class="lesson">
+      Laboratory research isn't a set of individual experiments — each stage produces evidence that
+      feeds the next, until enough of it points the same way to support a real conclusion.
+    </blockquote>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="pipeline-string">
+      Prepare <span class="arrow">→</span> Extract <span class="arrow">→</span> Process <span class="arrow">→</span>
+      Test <span class="arrow">→</span> Measure <span class="arrow">→</span> Analyse <span class="arrow">→</span>
+      Characterize <span class="arrow">→</span> Interpret
+    </div>
+    <div class="meta">
+      Council for Scientific and Industrial Research (CSIR)<br>
+      Centre for Nanostructures and Advanced Materials (CeNAM)<br>
+      Internship record — chemistry, microbiology, and materials characterization
+    </div>
+  </div>
+</footer>
+<script src="track.js"></script>
+</body>
+</html>

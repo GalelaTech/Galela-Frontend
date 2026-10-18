@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>My Professional CV · All skills bold · No stars</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 20px;
+    line-height: 1.4;
+    color: #333;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 20px;
+}
+
+#cv-content {
+    max-width: 800px;
+    margin: auto;
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+}
+
+/* Header */
+header { text-align: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #f0f0f0; }
+#name { font-size: 2.2em; font-weight: bold; margin-bottom: 5px; color: #2c3e50; }
+#headline { font-size: 1.1em; color: #666; margin-bottom: 8px; font-weight: normal; }
+#contact, #linkedin { color: #555; margin: 2px 0; font-size: 0.9em; }
+#linkedin a { color: #3498db; text-decoration: none; }
+
+/* Sections */
+section { margin-bottom: 15px; }
+h2 { color: #2c3e50; font-size: 1.2em; text-transform: uppercase; letter-spacing: 1px; }
+hr { border: none; border-top: 2px solid #3498db; margin: 5px 0 10px 0; width: 50px; }
+.summary-text { line-height: 1.4; text-align: justify; font-size: 0.95em; }
+.job, .edu-item { margin-bottom: 12px; }
+.job p, .edu-item p { font-weight: bold; margin-bottom: 3px; font-size: 0.95em; }
+ul { list-style-type: disc; margin-left: 18px; }
+li { margin-bottom: 2px; font-size: 0.9em; line-height: 1.3; }
+.circle-list { list-style-type: circle; }
+
+/* --- SKILL BOLDING: applied dynamically via JS, no stars anywhere --- */
+.skill-highlight {
+    font-weight: 700 !important;
+    background-color: #eef5ff;  /* very light blue background */
+    padding: 0 2px;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+/* Buttons */
+#cv-buttons { max-width: 800px; margin: 15px auto; text-align: center; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+button { margin: 10px 5px; padding: 8px 12px; border-radius: 6px; border: none; background-color: #0073e6; color: white; cursor: pointer; font-size: 13px; font-weight: bold; transition: transform 0.2s, box-shadow 0.2s; min-width: 140px; flex: 1 1 auto; }
+button:hover { background-color: #005bb5; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+#back-to-editor { background: #3498db !important; }
+#print-btn { background: #27ae60 !important; }
+/* download button removed */
+
+/* Loading Spinner */
+.loading { display: flex; justify-content: center; align-items: center; min-height: 200px; }
+.spinner { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+.error-message { text-align: center; color: #e74c3c; padding: 40px; }
+.error-message button { margin-top: 20px; padding: 10px 30px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer; }
+
+/* PRINT OPTIMIZED */
+@media print {
+    @page { size: A4; margin: 0.2in; }
+    #cv-buttons, button, textarea, input, select, #ai-summary, #job-desc,
+    #keyResponsibility, #keySummary, #skillSummary { display: none !important; }
+    body { margin: 0; padding: 0; background: white; line-height: 1.2; font-family: Arial, Helvetica, sans-serif; }
+    #cv-content { max-width: 100%; margin: 0; padding: 5px; box-shadow: none; border-radius: 0; min-height: 100vh; display: flex; flex-direction: column; }
+    section { margin-bottom: 4px; page-break-inside: avoid; }
+    .skill-highlight { font-weight: 700 !important; background-color: #f0f0f0; padding: 0; }
+}
+</style>
+</head>
+<body>
+
+<div id="cv-content">
+    <div class="loading" id="loading-spinner">
+        <div class="spinner"></div>
+        <p style="margin-left: 10px;">Loading your CV data...</p>
+    </div>
+
+    <header id="header-section" style="display: none;">
+        <div id="title">
+            <h1 id="name"></h1>
+            <h3 id="headline"></h3>
+            <p id="contact"></p>
+            <p id="linkedin">LinkedIn: <a href="#" target="_blank" id="linkedin-link"></a></p>
+        </div>
+    </header>
+
+    <section id="profile" style="display: none;">
+        <h2>PROFESSIONAL PROFILE SUMMARY</h2>
+        <hr>
+        <div id="summary-box" class="summary-text"></div>
+    </section>
+
+    <section id="experience-section" style="display: none;">
+        <h2>WORK EXPERIENCE</h2>
+        <hr>
+        <div id="experience-container"></div>
+    </section>
+
+    <section id="certificates-section" style="display: none;">
+        <h2>CERTIFICATE ACHIEVEMENTS</h2>
+        <hr>
+        <ul id="certificates-list"></ul>
+    </section>
+
+    <section id="education-section" style="display: none;">
+        <h2>EDUCATION AND QUALIFICATIONS</h2>
+        <hr>
+        <div id="education-container"></div>
+    </section>
+
+    <section id="skills-section" style="display: none;">
+        <h2>KEY COMPETENCIES AND SKILLS</h2>
+        <hr>
+        <ul id="skills-list"></ul>
+    </section>
+</div>
+
+<div id="cv-buttons" style="display: none;">
+    <button id="back-to-editor" onclick="goBackToEditor()">✏️ Back to Editor</button>
+    <button id="print-btn" onclick="printCV()">🖨️ Print CV</button>
+    <!-- download button removed -->
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+// --- Extract all skills from the skills list (clean, no stars) ---
+function extractSkillList() {
+    const skillItems = document.querySelectorAll('#skills-list li');
+    const skills = [];
+    skillItems.forEach(li => {
+        // get text content, trim, remove any leading/trailing stars/dashes/bullets just in case
+        let text = li.textContent.trim();
+        // remove common bullet artifacts (*, -, •) if they accidentally remain
+        text = text.replace(/^[\s*•\-]+/, '').replace(/[\s*•\-]+$/, '');
+        if (text.length > 1) skills.push(text);
+    });
+    return skills;
+}
+
+// --- Bold every occurrence of any skill from the skill list (case-insensitive, whole word) ---
+function boldAllSkills(rootElement, skillList) {
+    if (!rootElement || !skillList.length) return;
+
+    // sort by length desc to avoid partial overlaps (e.g. "C++" before "C")
+    const sortedSkills = [...skillList].sort((a, b) => b.length - a.length);
+
+    // create a combined regex that matches any of the skills as whole words, case-insensitive
+    // escape special characters like +,., etc.
+    const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const pattern = sortedSkills.map(s => `\\b${escapeRegex(s)}\\b`).join('|');
+    const regex = new RegExp(`(${pattern})`, 'gi');
+
+    // walk through all text nodes
+    const walker = document.createTreeWalker(
+        rootElement,
+        NodeFilter.SHOW_TEXT,
+        {
+            acceptNode: (node) => {
+                // skip script/style
+                if (node.parentElement.tagName === 'SCRIPT' || node.parentElement.tagName === 'STYLE') 
+                    return NodeFilter.FILTER_REJECT;
+                return NodeFilter.FILTER_ACCEPT;
+            }
+        }
+    );
+
+    const textNodes = [];
+    while (walker.nextNode()) textNodes.push(walker.currentNode);
+
+    textNodes.forEach(textNode => {
+        const text = textNode.nodeValue;
+        if (!regex.test(text)) return;
+
+        // reset regex before using
+        regex.lastIndex = 0;
+        const newHtml = text.replace(regex, '<span class="skill-highlight">$1</span>');
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = newHtml;
+        const fragment = document.createDocumentFragment();
+        while (tempDiv.firstChild) fragment.appendChild(tempDiv.firstChild);
+        textNode.parentNode.replaceChild(fragment, textNode);
+    });
+}
+
+// --- clean any star/dash/bullet artifacts from text nodes (removes * ** etc) ---
+function removeStarArtifacts(rootElement) {
+    const walker = document.createTreeWalker(
+        rootElement,
+        NodeFilter.SHOW_TEXT,
+        {
+            acceptNode: (node) => {
+                if (node.parentElement.tagName === 'SCRIPT' || node.parentElement.tagName === 'STYLE') 
+                    return NodeFilter.FILTER_REJECT;
+                return NodeFilter.FILTER_ACCEPT;
+            }
+        }
+    );
+    const textNodes = [];
+    while (walker.nextNode()) textNodes.push(walker.currentNode);
+
+    textNodes.forEach(textNode => {
+        let text = textNode.nodeValue;
+        // remove sequences of * ** *** etc that are not part of a word (i.e. surrounded by spaces or line start/end)
+        // but careful not to remove asterisks inside words like "C++" -> we keep them if they're part of skill.
+        // This regex removes standalone star sequences: at least two consecutive * with optional spaces around?
+        // Safer: remove any occurrence of ** or *** that are not part of alphanumeric word.
+        // We'll just remove patterns like **text** but our data is plain. We'll do simple: replace multiple stars with empty string if they are not attached to letters.
+        text = text.replace(/\*\*+/g, ''); // removes any sequence of two or more *
+        text = text.replace(/\*+/g, '');   // also single * if needed (bullet)
+        text = text.replace(/^[•\-\*]\s*/gm, ''); // remove leading bullet characters per line (but we already did per item)
+        if (text !== textNode.nodeValue) {
+            textNode.nodeValue = text;
+        }
+    });
+}
+
+// Load CV from localStorage
+function loadUserData() {
+    const savedData = localStorage.getItem("cv_data");
+    if (!savedData) { showError("No CV data found. Please create your CV first."); return; }
+
+    try {
+        const data = JSON.parse(savedData);
+        document.getElementById('loading-spinner').style.display = 'none';
+        let hasContent = false;
+
+        // Personal
+        if (data.personal && (data.personal.name || data.personal.headline)) {
+            document.getElementById('header-section').style.display = 'block';
+            document.getElementById('name').innerText = data.personal.name || '';
+            document.getElementById('headline').innerText = data.personal.headline || '';
+            const contacts = [];
+            if (data.personal.phone) contacts.push(`Mobile: ${data.personal.phone}`);
+            if (data.personal.email) contacts.push(`Email: ${data.personal.email}`);
+            document.getElementById('contact').innerText = contacts.join(' | ');
+            if (data.personal.linkedin) {
+                const link = document.getElementById('linkedin-link');
+                link.innerText = data.personal.linkedin;
+                link.href = data.personal.linkedin.startsWith('http') ? data.personal.linkedin : `https://${data.personal.linkedin}`;
+            }
+            hasContent = true;
+        }
+
+        // Profile
+        if (data.summary) {
+            document.getElementById('profile').style.display = 'block';
+            document.getElementById('summary-box').innerText = data.summary;
+            hasContent = true;
+        }
+
+        // Experience
+        if (data.experience && data.experience.length) {
+            const container = document.getElementById('experience-container');
+            container.innerHTML = '';
+            data.experience.forEach(exp => {
+                if (exp.title && exp.title.trim() !== '') {
+                    const article = document.createElement('article');
+                    article.className = 'job';
+                    let respHtml = '';
+                    if (exp.responsibilities) {
+                        // split by newline, clean each line from any leading stars/dashes
+                        const reps = exp.responsibilities.split('\n')
+                            .map(r => r.replace(/^[•\-\*]\s*/, '').trim())
+                            .filter(r => r);
+                        if (reps.length) respHtml = `<ul class="circle-list">${reps.map(r=>`<li>${r}</li>`).join('')}</ul>`;
+                    }
+                    article.innerHTML = `<p><strong>${exp.title}</strong> ${exp.duration? `| (${exp.duration})`:''}</p>${respHtml}`;
+                    container.appendChild(article);
+                }
+            });
+            document.getElementById('experience-section').style.display = 'block';
+            hasContent = true;
+        }
+
+        // Certificates
+        if (data.certificates && data.certificates.length) {
+            const list = document.getElementById('certificates-list');
+            list.innerHTML = '';
+            data.certificates.forEach(cert => {
+                if (cert.name && cert.name.trim() !== '') {
+                    let certName = cert.name.replace(/^[•\-\*]\s*/, '').trim();
+                    list.innerHTML += `<li><strong>${cert.year||''}:</strong> ${certName}</li>`;
+                }
+            });
+            document.getElementById('certificates-section').style.display = 'block';
+            hasContent = true;
+        }
+
+        // Education
+        if (data.education && data.education.length) {
+            const eduContainer = document.getElementById('education-container');
+            eduContainer.innerHTML = '';
+            data.education.forEach(edu => {
+                if (edu.title && edu.title.trim() !== '') {
+                    const article = document.createElement('article');
+                    article.className = 'edu-item';
+                    let achHtml = '';
+                    if (edu.achievements) {
+                        // split achievements by comma, clean each
+                        const achs = edu.achievements.split(',')
+                            .map(a => a.replace(/^[•\-\*]\s*/, '').trim())
+                            .filter(a => a);
+                        if (achs.length) achHtml = `<ul>${achs.map(a=>`<li>${a}</li>`).join('')}</ul>`;
+                    }
+                    article.innerHTML = `<p><strong>${edu.title}</strong> ${edu.duration?`| (${edu.duration})`:''}</p>${achHtml}`;
+                    eduContainer.appendChild(article);
+                }
+            });
+            document.getElementById('education-section').style.display = 'block';
+            hasContent = true;
+        }
+
+        // Skills (store raw but clean stars)
+        if (data.skills) {
+            // split lines, clean each from leading stars/dashes, filter empty
+            const skillsArray = data.skills.split('\n')
+                .map(s => s.replace(/^[•\-\*]\s*/, '').trim())
+                .filter(s => s);
+            if (skillsArray.length) {
+                document.getElementById('skills-list').innerHTML = skillsArray.map(s => `<li>${s}</li>`).join('');
+                document.getElementById('skills-section').style.display = 'block';
+                hasContent = true;
+            }
+        }
+
+        if (hasContent) {
+            document.getElementById('cv-buttons').style.display = 'flex';
+
+            // Step 1: aggressively remove any stray star artifacts from entire CV
+            removeStarArtifacts(document.getElementById('cv-content'));
+
+            // Step 2: now extract the cleaned skill list from the skills-section
+            const skillSet = extractSkillList();
+
+            // Step 3: make every skill bold everywhere (including summary, experience, education)
+            if (skillSet.length > 0) {
+                boldAllSkills(document.getElementById('cv-content'), skillSet);
+            }
+        }
+        else showError('No valid CV content found. Please add your info in the editor.');
+    } catch(e) { showError('Error loading your CV data.'); console.error(e); }
+}
+
+function showError(msg) { 
+    document.getElementById('loading-spinner').innerHTML = `<div class="error-message"><p>${msg}</p><button onclick="goBackToEditor()">Go to Editor</button></div>`; 
+}
+function goBackToEditor() { window.location.href = "users.html"; }
+function printCV() { 
+    document.getElementById('cv-buttons').style.display='none'; 
+    window.print(); 
+    window.onafterprint = ()=>{ document.getElementById('cv-buttons').style.display='flex'; }; 
+}
+
+window.onload = loadUserData;
+</script>
+</body>
+</html>

@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Professional CV Builder | Customizable Template</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, Helvetica, sans-serif; line-height: 1.6; color: #333; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; }
+        main { max-width: 1000px; margin: 0 auto; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+        header { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #f0f0f0; }
+        #name, .preview-name { font-size: 2.5em; font-weight: bold; margin-bottom: 10px; color: #2c3e50; }
+        #headline, .preview-headline { font-size: 1.2em; color: #666; margin-bottom: 15px; font-weight: normal; }
+        .contact-info { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; color: #555; }
+        .contact-info a { color: #3498db; text-decoration: none; }
+        #name-input { font-size: 2.5em; font-weight: bold; border: 1px solid #ddd; text-align: center; width: 100%; padding: 10px; margin-bottom: 10px; background: #f8f9fa; border-radius: 5px; }
+        #headline-input { font-size: 1.2em; border: 1px solid #ddd; text-align: center; width: 100%; padding: 8px; margin-bottom: 15px; background: #f8f9fa; border-radius: 5px; }
+        .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 15px; }
+        .contact-item { display: flex; flex-direction: column; text-align: left; }
+        .contact-item label { font-size: 0.8em; color: #666; margin-bottom: 3px; }
+        .contact-item input { padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.9em; }
+        section { margin-bottom: 30px; background: white; }
+        h2 { color: #2c3e50; font-size: 1.3em; text-transform: uppercase; letter-spacing: 1px; }
+        hr { border: none; border-top: 2px solid #3498db; margin: 8px 0 20px 0; width: 60px; }
+        textarea, input[type="text"], input[type="email"], input[type="tel"] { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-family: inherit; font-size: 14px; transition: border-color 0.3s; }
+        textarea:focus, input:focus { outline: none; border-color: #3498db; box-shadow: 0 0 5px rgba(52,152,219,0.3); }
+        textarea[readonly] { background-color: #f8f9fa; cursor: default; }
+        button { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 25px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold; transition: transform 0.2s, box-shadow 0.2s; margin-right: 10px; margin-bottom: 10px; }
+        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .job, .edu-item { margin-bottom: 25px; padding: 15px; background: #f8f9fa; border-radius: 5px; }
+        .edu-item p { font-weight: bold; margin-bottom: 10px; }
+        ul { list-style-type: disc; margin-left: 20px; }
+        li { margin-bottom: 5px; }
+        .add-btn { background: #27ae60; margin-top: 10px; }
+        .remove-btn { background: #e74c3c; }
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
+        .certificate-item { display: grid; grid-template-columns: 80px 1fr auto; gap: 10px; margin-bottom: 10px; align-items: center; }
+        .certificate-item input { padding: 8px; }
+        .preview-toggle { position: fixed; top: 20px; right: 20px; background: #3498db; color: white; padding: 10px 20px; border-radius: 5px; cursor: pointer; z-index: 1000; border: none; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .preview-mode .edit-mode, .preview-mode input:not([readonly]), .preview-mode textarea:not([readonly]), .preview-mode button:not(.preview-toggle):not(.no-hide) { display: none !important; }
+        .preview-mode .preview-mode-block { display: block !important; }
+        .preview-mode .preview-mode-flex { display: flex !important; }
+        .preview-header { display: none; }
+        .preview-mode .preview-header { display: block; text-align: center; margin-bottom: 30px; }
+        .preview-summary { margin-bottom: 20px; line-height: 1.6; }
+        .preview-experience { margin-bottom: 20px; }
+        .preview-job { margin-bottom: 20px; }
+        .preview-job-title { font-weight: bold; color: #2c3e50; }
+        .preview-date { color: #666; font-style: italic; margin-bottom: 5px; }
+        .preview-certificates ul { list-style-type: none; margin-left: 0; }
+        .preview-certificates li { margin-bottom: 5px; }
+        .success-message { background: #27ae60; color: white; padding: 15px; border-radius: 5px; margin-bottom: 20px; text-align: center; animation: slideDown 0.5s ease; display: none; }
+        .success-message a { color: white; font-weight: bold; text-decoration: underline; }
+        @keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .nav-buttons { display: flex; justify-content: center; gap: 10px; margin-top: 30px; flex-wrap: wrap; }
+        .nav-buttons button { min-width: 200px; }
+        .view-cv-btn { background: #27ae60 !important; }
+        .back-btn { background: #3498db !important; }
+        .connection-status { position: fixed; bottom: 20px; right: 20px; padding: 8px 15px; border-radius: 20px; font-size: 12px; font-weight: bold; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .status-local { background: #27ae60; color: white; }
+        .status-render { background: #3498db; color: white; }
+        .status-error { background: #e74c3c; color: white; }
+        @media (max-width: 768px) { main { padding: 20px; } .contact-grid { grid-template-columns: 1fr; } .nav-buttons { flex-direction: column; } .nav-buttons button { width: 100%; } }
+    </style>
+</head>
+<body>
+
+<button class="preview-toggle" onclick="togglePreview()">&#128065;&#65039; Toggle Preview Mode</button>
+<div id="connection-status" class="connection-status status-local">&#128994; Checking connection...</div>
+
+<main id="cv-content">
+    <div id="success-message" class="success-message">
+        &#9989; CV Generated Successfully! <a href="users_cvs.html" onclick="saveAllCVData()">Click here to view your formatted CV</a>
+    </div>
+
+    <header class="edit-mode">
+        <input type="text" id="name-input" placeholder="Your Full Name" value="JOHN DOE">
+        <input type="text" id="headline-input" placeholder="Professional Headline" value="Bachelor of Science - Computer Science">
+        <div class="contact-grid">
+            <div class="contact-item"><label>Phone</label><input type="tel" id="phone-input" placeholder="Phone Number" value="+27 12 345 6789"></div>
+            <div class="contact-item"><label>Email</label><input type="email" id="email-input" placeholder="Email Address" value="john.doe@email.com"></div>
+            <div class="contact-item"><label>LinkedIn</label><input type="text" id="linkedin-input" placeholder="LinkedIn Username" value="linkedin.com/in/johndoe"></div>
+        </div>
+    </header>
+
+    <div class="preview-header">
+        <h1 class="preview-name" id="preview-name">JOHN DOE</h1>
+        <h3 class="preview-headline" id="preview-headline">Bachelor of Science - Computer Science</h3>
+        <div class="contact-info">
+            <span id="preview-phone">+27 12 345 6789</span>
+            <span id="preview-email">john.doe@email.com</span>
+            <span id="preview-linkedin">linkedin.com/in/johndoe</span>
+        </div>
+    </div>
+
+    <section id="profile">
+        <h2>Professional Profile Summary</h2><hr>
+        <div class="edit-mode">
+            <div class="input-group">
+                <label>Job Description (Paste to generate tailored summary)</label>
+                <textarea id="job-desc" placeholder="Paste the job description here to generate a tailored summary..." rows="4"></textarea>
+            </div>
+            <button onclick="generateSummary()">&#10024; Generate AI Summary</button>
+            <div class="input-group">
+                <label>Your Generated Summary</label>
+                <textarea id="ai-summary" placeholder="Your AI-powered summary will appear here..." rows="4" readonly></textarea>
+            </div>
+        </div>
+        <div class="preview-summary" id="preview-summary"></div>
+    </section>
+
+    <section id="experience">
+        <h2>Work Experience</h2><hr>
+        <div id="experience-container" class="edit-mode"></div>
+        <div id="preview-experience" class="preview-experience"></div>
+        <button onclick="addExperience()" class="add-btn edit-mode">&#10133; Add Work Experience</button>
+    </section>
+
+    <section id="certificates">
+        <h2>Certificate Achievements</h2><hr>
+        <div id="certificates-container" class="edit-mode"></div>
+        <div id="preview-certificates" class="preview-certificates"></div>
+        <button onclick="addCertificate()" class="add-btn edit-mode">&#10133; Add Certificate</button>
+    </section>
+
+    <section id="education">
+        <h2>Education and Qualifications</h2><hr>
+        <div id="education-container" class="edit-mode"></div>
+        <div id="preview-education" class="preview-education"></div>
+        <button onclick="addEducation()" class="add-btn edit-mode">&#10133; Add Education</button>
+    </section>
+
+    <section id="skills">
+        <h2>Key Competencies and Skills</h2><hr>
+        <div class="edit-mode">
+            <div class="input-group">
+                <label>Your Skills (comma-separated)</label>
+                <textarea id="keySkills" placeholder="e.g., Project Management, Python, Data Analysis, Leadership..." rows="3"></textarea>
+            </div>
+            <button onclick="generateSkillSummary()">&#10024; Generate Skills Summary</button>
+            <div class="input-group">
+                <label>AI-Enhanced Skills Summary</label>
+                <textarea id="skillSummary" placeholder="Your AI-powered skills summary will appear here..." rows="4" readonly></textarea>
+            </div>
+        </div>
+        <div id="preview-skills" class="preview-skills"></div>
+    </section>
+
+    <div class="nav-buttons">
+        <button onclick="generateAllSections()" class="no-hide">&#128196; Generate Complete CV</button>
+        <button onclick="saveAndViewCV()" class="view-cv-btn no-hide">&#128065;&#65039; View Formatted CV</button>
+        <button onclick="resetForm()" class="remove-btn no-hide">&#128260; Reset Form</button>
+        <button onclick="testBackendConnection()" class="no-hide" style="background:#f39c12;">&#128272; Test Connection</button>
+    </div>
+</main>
+
+<script>
+    let experienceCount = 0, certificateCount = 0, educationCount = 0, isPreviewMode = false;
+
+    // ── API CONFIG: auto-switches local vs live ──────────────────────────
+    const BACKEND_URLS = {
+        local:  'http://127.0.0.1:8000',
+        render: 'https://cv-software-backend.onrender.com'
+    };
+    let activeBackend = (window.location.hostname === '127.0.0.1' ||
+                         window.location.hostname === 'localhost') ? 'local' : 'render';
+    let backendAvailable = { local: false, render: false };
+
+    function updateStatusUI(backend) {
+        const el = document.getElementById('connection-status');
+        if (!el) return;
+        if (backend === 'local')  { el.innerText = '🟢 Connected to Local Backend';  el.className = 'connection-status status-local'; }
+        else if (backend === 'render') { el.innerText = '🔵 Connected to Render Backend'; el.className = 'connection-status status-render'; }
+        else { el.innerText = '🔴 No Backend Connection'; el.className = 'connection-status status-error'; }
+    }
+
+    function getActiveBackendUrl() {
+        return activeBackend ? BACKEND_URLS[activeBackend] : null;
+    }
+
+    // ── FIX 1: Test connection using real health endpoint ────────────────
+    async function testBackendConnection() {
+        updateStatusUI(null);
+        document.getElementById('connection-status').innerText = '⏳ Testing...';
+
+        async function ping(url) {
+            try {
+                const r = await fetch(`${url}/api/health/`, { method: 'GET', mode: 'cors', headers: { 'Accept': 'application/json' } });
+                return r.ok || r.status === 401;
+            } catch { return false; }
+        }
+
+        backendAvailable.local  = await ping(BACKEND_URLS.local);
+        backendAvailable.render = await ping(BACKEND_URLS.render);
+
+        if (backendAvailable.local)       activeBackend = 'local';
+        else if (backendAvailable.render) activeBackend = 'render';
+        else                              activeBackend = null;
+
+        updateStatusUI(activeBackend);
+        return activeBackend;
+    }
+
+    // ── FIX 2: Always send JWT token with every API request ──────────────
+    async function makeApiRequest(endpoint, data, retryCount) {
+        retryCount = retryCount || 0;
+        const maxRetries = 1;
+
+        if (!getActiveBackendUrl()) {
+            await testBackendConnection();
+            if (!activeBackend) throw new Error('No backend connection available');
+        }
+
+        // Read token from localStorage (set by loginform.html after login)
+        const token = localStorage.getItem('access_token');
+        const headers = { 'Content-Type': 'application/json' };
+        if (token) headers['Authorization'] = 'Bearer ' + token;
+
+        try {
+            const response = await fetch(getActiveBackendUrl() + endpoint, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(data)
+            });
+
+            // FIX 3: Handle 401 clearly instead of showing confusing error
+            if (response.status === 401) {
+                updateStatusUI(null);
+                document.getElementById('connection-status').innerText = '🔴 Not logged in';
+                throw new Error('You are not logged in. Please open loginform.html and sign in first, then return to the CV builder.');
+            }
+
+            return response;
+
+        } catch (error) {
+            if (error.message.includes('not logged in') || error.message.includes('Authentication')) throw error;
+            console.warn('Request to ' + activeBackend + ' failed:', error.message);
+
+            backendAvailable[activeBackend] = false;
+            if (activeBackend === 'local' && backendAvailable.render) {
+                activeBackend = 'render'; updateStatusUI('render');
+                return makeApiRequest(endpoint, data, retryCount + 1);
+            } else if (activeBackend === 'render' && backendAvailable.local) {
+                activeBackend = 'local'; updateStatusUI('local');
+                return makeApiRequest(endpoint, data, retryCount + 1);
+            } else if (retryCount < maxRetries) {
+                await new Promise(r => setTimeout(r, 1000));
+                return makeApiRequest(endpoint, data, retryCount + 1);
+            }
+            throw new Error('All backends unavailable');
+        }
+    }
+
+    window.onload = async function() {
+        loadSavedData();
+        addExperience(); addCertificate(); addCertificate(); addEducation(); addEducation();
+        updatePreview();
+        await testBackendConnection();
+    };
+
+    function loadSavedData() {
+        const savedSummary = localStorage.getItem('cv_summary');
+        if (savedSummary) document.getElementById('ai-summary').value = savedSummary;
+        const savedSkills = localStorage.getItem('skills_summary');
+        if (savedSkills) document.getElementById('skillSummary').value = savedSkills;
+        const savedCVData = localStorage.getItem('cv_data');
+        if (savedCVData) {
+            try {
+                const data = JSON.parse(savedCVData);
+                document.getElementById('name-input').value     = data.personal?.name     || 'JOHN DOE';
+                document.getElementById('headline-input').value = data.personal?.headline || 'Bachelor of Science - Computer Science';
+                document.getElementById('phone-input').value    = data.personal?.phone    || '+27 12 345 6789';
+                document.getElementById('email-input').value    = data.personal?.email    || 'john.doe@email.com';
+                document.getElementById('linkedin-input').value = data.personal?.linkedin || 'linkedin.com/in/johndoe';
+            } catch(e) { console.log('Error loading saved data:', e); }
+        }
+    }
+
+    function saveAllCVData() {
+        const experienceData = [];
+        for (let i = 0; i < experienceCount; i++) {
+            experienceData.push({
+                title: document.getElementById('exp-'+i+'-title')?.value || '',
+                duration: document.getElementById('exp-'+i+'-duration')?.value || '',
+                responsibilities: document.getElementById('exp-'+i+'-summary')?.value || document.getElementById('exp-'+i+'-desc')?.value || ''
+            });
+        }
+        const certificateData = [];
+        document.querySelectorAll('.certificate-item').forEach(item => {
+            certificateData.push({ year: item.children[0]?.value || '', name: item.children[1]?.value || '' });
+        });
+        const educationData = [];
+        for (let i = 0; i < educationCount; i++) {
+            educationData.push({
+                title: document.getElementById('edu-'+i+'-title')?.value || '',
+                duration: document.getElementById('edu-'+i+'-duration')?.value || '',
+                achievements: document.getElementById('edu-'+i+'-achievements')?.value || ''
+            });
+        }
+        const cvData = {
+            personal: {
+                name: document.getElementById('name-input').value,
+                headline: document.getElementById('headline-input').value,
+                phone: document.getElementById('phone-input').value,
+                email: document.getElementById('email-input').value,
+                linkedin: document.getElementById('linkedin-input').value
+            },
+            summary: document.getElementById('ai-summary').value,
+            experience: experienceData, certificates: certificateData,
+            education: educationData,
+            skills: document.getElementById('skillSummary').value || document.getElementById('keySkills').value
+        };
+        const cvDisplayData = {
+            name: cvData.personal.name, headline: cvData.personal.headline,
+            contact: 'Mobile: ' + cvData.personal.phone + ' | Email: ' + cvData.personal.email,
+            linkedin: cvData.personal.linkedin, summary: cvData.summary,
+            experience: experienceData, certificates: certificateData,
+            education: educationData, skills: cvData.skills
+        };
+        localStorage.setItem('cv_data', JSON.stringify(cvData));
+        localStorage.setItem('cv_display_data', JSON.stringify(cvDisplayData));
+        return cvData;
+    }
+
+    function saveAndViewCV() { saveAllCVData(); window.location.href = 'users_cvs.html'; }
+
+    function showSuccessMessage() {
+        const msgDiv = document.getElementById('success-message');
+        msgDiv.style.display = 'block';
+        setTimeout(() => { msgDiv.style.display = 'none'; }, 8000);
+    }
+
+    function togglePreview() {
+        isPreviewMode = !isPreviewMode;
+        document.body.classList.toggle('preview-mode', isPreviewMode);
+        if (isPreviewMode) updatePreview();
+    }
+
+    function updatePreview() {
+        document.getElementById('preview-name').textContent     = document.getElementById('name-input').value.toUpperCase();
+        document.getElementById('preview-headline').textContent = document.getElementById('headline-input').value;
+        document.getElementById('preview-phone').textContent    = document.getElementById('phone-input').value;
+        document.getElementById('preview-email').textContent    = document.getElementById('email-input').value;
+        document.getElementById('preview-linkedin').textContent = document.getElementById('linkedin-input').value;
+        const summary = document.getElementById('ai-summary').value;
+        document.getElementById('preview-summary').innerHTML = summary ? '<p>' + summary + '</p>' : '<p><em>No summary generated yet.</em></p>';
+        updateExperiencePreview(); updateCertificatesPreview(); updateEducationPreview();
+        const skills = document.getElementById('skillSummary').value || document.getElementById('keySkills').value;
+        document.getElementById('preview-skills').innerHTML = skills ? '<p>' + skills + '</p>' : '<p><em>No skills added yet.</em></p>';
+    }
+
+    function updateExperiencePreview() {
+        let html = '';
+        for (let i = 0; i < experienceCount; i++) {
+            const title = document.getElementById('exp-'+i+'-title')?.value;
+            if (title) html += '<div class="preview-job"><div class="preview-job-title">' + title + '</div><div class="preview-date">' + (document.getElementById('exp-'+i+'-duration')?.value || '') + '</div><p>' + (document.getElementById('exp-'+i+'-summary')?.value || 'No responsibilities added yet.') + '</p></div>';
+        }
+        document.getElementById('preview-experience').innerHTML = html || '<p><em>No work experience added yet.</em></p>';
+    }
+
+    function updateCertificatesPreview() {
+        let html = '<ul>';
+        document.querySelectorAll('.certificate-item').forEach(item => {
+            const year = item.children[0]?.value, name = item.children[1]?.value;
+            if (year && name) html += '<li><strong>' + year + ':</strong> ' + name + '</li>';
+        });
+        document.getElementById('preview-certificates').innerHTML = html + '</ul>';
+    }
+
+    function updateEducationPreview() {
+        let html = '';
+        for (let i = 0; i < educationCount; i++) {
+            const title = document.getElementById('edu-'+i+'-title')?.value;
+            if (title) {
+                const dur = document.getElementById('edu-'+i+'-duration')?.value || '';
+                const ach = document.getElementById('edu-'+i+'-achievements')?.value || '';
+                html += '<article class="edu-item"><p><strong>' + title + ' | ' + dur + '</strong></p>' +
+                    (ach ? '<ul>' + ach.split(',').map(a => '<li>' + a.trim() + '</li>').join('') + '</ul>' : '') + '</article>';
+            }
+        }
+        document.getElementById('preview-education').innerHTML = html || '<p><em>No education added yet.</em></p>';
+    }
+
+    function addExperience() {
+        const container = document.getElementById('experience-container');
+        const expId = 'exp-' + experienceCount;
+        const div = document.createElement('article');
+        div.className = 'job'; div.id = expId;
+        div.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;"><strong>Experience #' + (experienceCount+1) + '</strong><button onclick="removeItem(\'' + expId + '\')" class="remove-btn">✖ Remove</button></div>' +
+            '<div class="input-group"><label>Job Title & Company</label><input type="text" id="' + expId + '-title" placeholder="e.g., Software Developer | Company" value="Position | Company Name"></div>' +
+            '<div class="input-group"><label>Duration</label><input type="text" id="' + expId + '-duration" placeholder="e.g., June 2023 – Present" value="June 2023 – Present"></div>' +
+            '<div class="input-group"><label>Key Responsibilities (Paste to generate)</label><textarea id="' + expId + '-desc" placeholder="Paste key responsibilities here..." rows="3"></textarea></div>' +
+            '<button onclick="generateResponsibilities(\'' + expId + '\')">✨ Generate Responsibilities</button>' +
+            '<div class="input-group"><label>AI-Generated Responsibilities</label><textarea id="' + expId + '-summary" placeholder="Generated responsibilities..." rows="4" readonly></textarea></div>';
+        container.appendChild(div); experienceCount++;
+    }
+
+    function addCertificate() {
+        const container = document.getElementById('certificates-container');
+        const certId = 'cert-' + certificateCount;
+        const div = document.createElement('div');
+        div.className = 'certificate-item'; div.id = certId;
+        div.innerHTML = '<input type="text" placeholder="Year" value="2025" style="width:80px;"><input type="text" placeholder="Certificate Name" value="Professional Certificate"><button onclick="removeItem(\'' + certId + '\')" class="remove-btn">✖</button>';
+        container.appendChild(div); certificateCount++;
+    }
+
+    function addEducation() {
+        const container = document.getElementById('education-container');
+        const eduId = 'edu-' + educationCount;
+        const div = document.createElement('article');
+        div.className = 'edu-item'; div.id = eduId;
+        div.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;"><strong>Education #' + (educationCount+1) + '</strong><button onclick="removeItem(\'' + eduId + '\')" class="remove-btn">✖ Remove</button></div>' +
+            '<div class="input-group"><label>Degree & Institution</label><input type="text" id="' + eduId + '-title" placeholder="e.g., BSc Computer Science | UP" value="Degree | Institution"></div>' +
+            '<div class="input-group"><label>Duration</label><input type="text" id="' + eduId + '-duration" placeholder="e.g., 2020–2023" value="2020–2023"></div>' +
+            '<div class="input-group"><label>Achievements (comma-separated)</label><textarea id="' + eduId + '-achievements" placeholder="e.g., Graduated with distinction, Dean\'s list" rows="2"></textarea></div>';
+        container.appendChild(div); educationCount++;
+    }
+
+    function removeItem(id) {
+        const el = document.getElementById(id);
+        if (el) { el.remove(); }
+        if (id.startsWith('exp-')) { const items = document.querySelectorAll('#experience-container .job'); items.forEach((e,i) => e.querySelector('strong').textContent = 'Experience #'+(i+1)); experienceCount = items.length; }
+        else if (id.startsWith('cert-')) { certificateCount = document.querySelectorAll('.certificate-item').length; }
+        else if (id.startsWith('edu-')) { const items = document.querySelectorAll('#education-container .edu-item'); items.forEach((e,i) => e.querySelector('strong').textContent = 'Education #'+(i+1)); educationCount = items.length; }
+        if (isPreviewMode) updatePreview();
+    }
+
+    function resetForm() {
+        if (!confirm('Reset all fields?')) return;
+        ['name-input','headline-input','phone-input','email-input','linkedin-input'].forEach(id => {
+            const defaults = { 'name-input':'JOHN DOE','headline-input':'Bachelor of Science - Computer Science','phone-input':'+27 12 345 6789','email-input':'john.doe@email.com','linkedin-input':'linkedin.com/in/johndoe' };
+            document.getElementById(id).value = defaults[id];
+        });
+        document.querySelectorAll('textarea').forEach(el => { if (!el.id.includes('name') && !el.id.includes('headline')) el.value = ''; });
+        ['cv_summary','skills_summary','key_summary','cv_data','cv_display_data'].forEach(k => localStorage.removeItem(k));
+        document.getElementById('experience-container').innerHTML = '';
+        document.getElementById('certificates-container').innerHTML = '';
+        document.getElementById('education-container').innerHTML = '';
+        experienceCount = 0; certificateCount = 0; educationCount = 0;
+        addExperience(); addCertificate(); addCertificate(); addEducation(); addEducation();
+        if (isPreviewMode) updatePreview();
+    }
+
+    function collectCVData() {
+        const experienceData = [];
+        for (let i = 0; i < experienceCount; i++) experienceData.push({ title: document.getElementById('exp-'+i+'-title')?.value||'', duration: document.getElementById('exp-'+i+'-duration')?.value||'', responsibilities: document.getElementById('exp-'+i+'-desc')?.value||'' });
+        const certificateData = [];
+        document.querySelectorAll('.certificate-item').forEach(item => certificateData.push({ year: item.querySelector('input:first-child')?.value||'', name: item.querySelector('input:nth-child(2)')?.value||'' }));
+        const educationData = [];
+        for (let i = 0; i < educationCount; i++) educationData.push({ title: document.getElementById('edu-'+i+'-title')?.value||'', duration: document.getElementById('edu-'+i+'-duration')?.value||'', achievements: document.getElementById('edu-'+i+'-achievements')?.value||'' });
+        return { personal: { name: document.getElementById('name-input')?.value||'', headline: document.getElementById('headline-input')?.value||'', phone: document.getElementById('phone-input')?.value||'', email: document.getElementById('email-input')?.value||'', linkedin: document.getElementById('linkedin-input')?.value||'' }, experience: experienceData, certificates: certificateData, education: educationData, skills: document.getElementById('keySkills')?.value||'' };
+    }
+
+    function formatForAPI() {
+        const data = collectCVData();
+        return {
+            education:    data.education.map(e => e.title+' ('+e.duration+'): '+e.achievements).join('\n\n'),
+            certificates: data.certificates.map(c => c.year+': '+c.name).join('\n'),
+            experience:   data.experience.map(e => e.title+' ('+e.duration+'): '+e.responsibilities).join('\n\n'),
+            skills: data.skills
+        };
+    }
+
+    async function generateSummary() {
+        const jobDescription = document.getElementById('job-desc').value.trim();
+        const summaryBox = document.getElementById('ai-summary');
+        if (!jobDescription) { alert('Please paste a job description first.'); return; }
+        summaryBox.value = 'Generating professional summary... Please wait.';
+        summaryBox.style.color = '#666';
+        try {
+            const formattedData = formatForAPI();
+            const response = await makeApiRequest('/api/generate-summary/', { job_description: jobDescription, education: formattedData.education, certificates: formattedData.certificates, experience: formattedData.experience });
+            const data = await response.json();
+            if (response.ok && data.summary) {
+                summaryBox.value = data.summary.trim(); summaryBox.style.color = '#333';
+                localStorage.setItem('cv_summary', data.summary.trim());
+                if (isPreviewMode) updatePreview();
+                return data.summary.trim();
+            } else { summaryBox.value = 'Failed: ' + (data.detail || JSON.stringify(data)); summaryBox.style.color = '#e74c3c'; }
+        } catch(error) { summaryBox.value = 'Error: ' + error.message; summaryBox.style.color = '#e74c3c'; }
+        return null;
+    }
+
+    async function generateResponsibilities(expId) {
+        const keyEl  = document.getElementById((expId||'') + '-desc') || document.getElementById('keyResponsibility');
+        const outEl  = document.getElementById((expId||'') + '-summary') || document.getElementById('keySummary');
+        if (!keyEl || !outEl) return;
+        const text = keyEl.value.trim();
+        if (!text) { alert('Please paste the key responsibilities.'); return; }
+        outEl.value = 'Generating... Please wait.'; outEl.style.color = '#666';
+        try {
+            const response = await makeApiRequest('/api/generate-key-responsibility/', { jobDescription: text, experience: formatForAPI().experience });
+            const data = await response.json();
+            if (response.ok && data.responsibilities) {
+                outEl.value = data.responsibilities.trim(); outEl.style.color = '#333';
+                localStorage.setItem('resp_summary_' + expId, data.responsibilities.trim());
+                if (isPreviewMode) updatePreview();
+                return data.responsibilities.trim();
+            } else { outEl.value = 'Failed: ' + (data.detail || JSON.stringify(data)); outEl.style.color = '#e74c3c'; }
+        } catch(error) { outEl.value = 'Error: ' + error.message; outEl.style.color = '#e74c3c'; }
+        return null;
+    }
+
+    async function generateSkillSummary() {
+        const keySkills = document.getElementById('keySkills').value.trim();
+        const summaryBox = document.getElementById('skillSummary');
+        if (!keySkills) { alert('Please enter your skills.'); return; }
+        summaryBox.value = 'Generating skill summary... Please wait.'; summaryBox.style.color = '#666';
+        try {
+            const response = await makeApiRequest('/api/generate-skill-summary/', { skills: keySkills });
+            const data = await response.json();
+            if (response.ok && data.skill_summary) {
+                summaryBox.value = data.skill_summary.trim(); summaryBox.style.color = '#333';
+                localStorage.setItem('skills_summary', data.skill_summary.trim());
+                if (isPreviewMode) updatePreview();
+                return data.skill_summary.trim();
+            } else { summaryBox.value = 'Failed: ' + (data.detail || JSON.stringify(data)); summaryBox.style.color = '#e74c3c'; }
+        } catch(error) { summaryBox.value = 'Error: ' + error.message; summaryBox.style.color = '#e74c3c'; }
+        return null;
+    }
+
+    async function generateAllSections() {
+        const btn = document.querySelector('button[onclick="generateAllSections()"]');
+        const orig = btn.innerText;
+        btn.innerText = '⏳ Generating... Please wait'; btn.disabled = true; btn.style.opacity = '0.7';
+        try {
+            await generateSummary();
+            await generateSkillSummary();
+            for (let i = 0; i < experienceCount; i++) {
+                const desc = document.getElementById('exp-'+i+'-desc');
+                if (desc && desc.value) { await generateResponsibilities('exp-'+i); await new Promise(r => setTimeout(r, 500)); }
+            }
+            saveAllCVData(); showSuccessMessage();
+            if (isPreviewMode) updatePreview();
+            alert('✅ All sections generated! Click "View Formatted CV" to see your CV.');
+        } catch(error) {
+            alert('❌ Error: ' + error.message);
+        } finally { btn.innerText = orig; btn.disabled = false; btn.style.opacity = '1'; }
+    }
+
+    document.addEventListener('input', () => { if (isPreviewMode) updatePreview(); });
+    document.addEventListener('keydown', e => { if (e.ctrlKey && e.shiftKey && e.key === 'G') { e.preventDefault(); generateAllSections(); } });
+    setInterval(testBackendConnection, 30000);
+
+    window.togglePreview = togglePreview; window.addExperience = addExperience;
+    window.addCertificate = addCertificate; window.addEducation = addEducation;
+    window.removeItem = removeItem; window.resetForm = resetForm;
+    window.generateSummary = generateSummary; window.generateResponsibilities = generateResponsibilities;
+    window.generateSkillSummary = generateSkillSummary; window.generateAllSections = generateAllSections;
+    window.saveAndViewCV = saveAndViewCV; window.testBackendConnection = testBackendConnection;
+    window.saveAllCVData = saveAllCVData;
+</script>
+</body>
+</html>

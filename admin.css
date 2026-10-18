@@ -1,0 +1,379 @@
+/* ──────────────────────────────────────────────────────────
+   Galela Dashboard — admin.css
+   Layered on top of style.css (colors, fonts, buttons reused).
+   ────────────────────────────────────────────────────────── */
+
+.dashboard-page {
+    background: var(--paper);
+    min-height: 100vh;
+    padding-bottom: 4rem;
+}
+
+/* ── Header ──────────────────────────────────────────────── */
+.dash-header {
+    background: linear-gradient(135deg, var(--nav-blue), var(--nav-green));
+    color: #fff;
+    padding: 1.5rem 0;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+}
+
+.dash-header .dash-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.dash-title {
+    margin: 0;
+    font-size: 1.6rem;
+    font-family: var(--font-head);
+    font-weight: 600;
+    color: #fff;
+}
+
+.dash-subtitle {
+    margin: 0.25rem 0 0;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+/* ── Layout ──────────────────────────────────────────────── */
+.dash-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+.dash-section {
+    background: #fff;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--card-shadow);
+}
+
+.dash-section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--line);
+}
+
+.dash-section-head h2 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-family: var(--font-head);
+    color: var(--ink);
+}
+
+.dash-count {
+    display: inline-block;
+    margin-left: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: var(--ink-soft);
+    font-family: var(--font-mono);
+}
+
+/* ── List of rows ────────────────────────────────────────── */
+.dash-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.dash-row {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--paper);
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.dash-row:hover {
+    border-color: rgba(var(--glow), 0.5);
+    background: #fff;
+}
+
+.dash-row[open] {
+    border-color: rgba(var(--glow), 0.7);
+    background: #fff;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.dash-row summary {
+    display: grid;
+    grid-template-columns: minmax(80px, auto) minmax(100px, 1fr) minmax(120px, 1.2fr) minmax(80px, auto) minmax(140px, auto);
+    gap: 1rem;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    list-style: none;
+    font-size: 0.9rem;
+}
+
+.dash-row summary::-webkit-details-marker { display: none; }
+
+.dash-row summary::before {
+    content: '▶';
+    font-size: 0.65rem;
+    color: var(--ink-faint);
+    margin-right: -0.5rem;
+    transition: transform 0.15s ease;
+}
+
+.dash-row[open] summary::before {
+    transform: rotate(90deg);
+}
+
+.row-id {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    color: var(--brand);
+}
+
+.row-meta,
+.row-path {
+    color: var(--ink-soft);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.row-country {
+    color: var(--ink);
+    font-size: 0.85rem;
+}
+
+.row-time {
+    color: var(--ink-faint);
+    font-size: 0.8rem;
+    font-family: var(--font-mono);
+    text-align: right;
+}
+
+/* Status pill */
+.row-status {
+    display: inline-block;
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.status-pending     { background: #fff3cd; color: #664d03; }
+.status-in_progress { background: #cff4fc; color: #055160; }
+.status-completed   { background: #d1e7dd; color: #0f5132; }
+.status-cancelled   { background: #f8d7da; color: #842029; }
+
+/* ── Detail panel ────────────────────────────────────────── */
+.dash-row > .dash-dl,
+.dash-row > .dash-files-title,
+.dash-row > .dash-files,
+.dash-row > .dash-muted {
+    margin-left: 2rem;
+    margin-right: 1rem;
+}
+
+.dash-dl {
+    margin: 0 0 1rem;
+    padding: 0.75rem 0;
+    border-top: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.dash-dl-row {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 1rem;
+    font-size: 0.88rem;
+}
+
+.dash-dl-row dt {
+    color: var(--ink-faint);
+    font-weight: 500;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.dash-dl-row dd {
+    margin: 0;
+    color: var(--ink);
+    word-break: break-word;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+}
+
+/* ── Files ───────────────────────────────────────────────── */
+.dash-files-title {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--ink-faint);
+    margin: 0 0 0.5rem;
+}
+
+.dash-files {
+    list-style: none;
+    margin: 0 0 1rem;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.dash-files li {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.4rem 0.75rem;
+    background: var(--paper-deep);
+    border-radius: 6px;
+    font-size: 0.85rem;
+}
+
+.file-name {
+    font-weight: 500;
+    color: var(--ink);
+    flex: 1;
+}
+
+.file-size {
+    color: var(--ink-soft);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+}
+
+.file-type {
+    color: var(--ink-faint);
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+}
+
+/* ── Empty / status ──────────────────────────────────────── */
+.dash-empty,
+.dash-muted {
+    padding: 1rem;
+    text-align: center;
+    color: var(--ink-faint);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.dash-status {
+    padding: 0.85rem 1rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.dash-status.is-error {
+    background: #f8d7da;
+    color: #842029;
+    border: 1px solid #f5c2c7;
+}
+
+/* ── Pagination ──────────────────────────────────────────── */
+.dash-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+}
+
+.dash-page-info {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    font-family: var(--font-mono);
+    min-width: 100px;
+    text-align: center;
+}
+
+.dash-pagination .btn {
+    padding: 0.4rem 1rem;
+    font-size: 0.85rem;
+}
+
+.dash-pagination .btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 780px) {
+    .dash-row summary {
+        grid-template-columns: 1fr;
+        gap: 0.3rem;
+    }
+
+    .row-time { text-align: left; }
+
+    .dash-dl-row {
+        grid-template-columns: 1fr;
+        gap: 0.15rem;
+    }
+
+    .dash-row > .dash-dl,
+    .dash-row > .dash-files-title,
+    .dash-row > .dash-files,
+    .dash-row > .dash-muted {
+        margin-left: 1rem;
+    }
+}
+
+/* ── Action Buttons (Delete) ─────────────────────────────── */
+.dash-row-actions {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px dashed var(--line);
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: #fff;
+    border: none;
+    transition: background 0.2s ease;
+}
+
+.btn-danger:hover {
+    background: #bb2d3b;
+}
+
+.btn-sm {
+    padding: 0.4rem 1rem;
+    font-size: 0.85rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-danger:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.file-link {
+    color: var(--brand);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.file-link:hover {
+    color: var(--brand-dark);
+    text-decoration: underline;
+}

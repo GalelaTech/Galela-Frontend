@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galela Dashboard</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600&family=JetBrains+Mono:wght@500&display=swap">
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+
+<body class="dashboard-page">
+
+    <header class="dash-header">
+        <div class="dash-container">
+            <div>
+                <h1 class="dash-title">Galela Dashboard</h1>
+                <p class="dash-subtitle">Back-office · form submissions and site analytics</p>
+            </div>
+            <button id="refresh-btn" class="btn btn-primary" type="button">
+                <span class="btn-label">Refresh</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="dash-container">
+
+        <!-- ── Visits ────────────────────────────────── -->
+        <section class="dash-section">
+            <div class="dash-section-head">
+                <h2>Visits <span class="dash-count" id="visits-count">—</span></h2>
+            </div>
+
+            <div id="visits-status" class="dash-status" hidden></div>
+            <div id="visits-list" class="dash-list"></div>
+
+            <nav class="dash-pagination" data-for="visits">
+                <button class="btn btn-outline" data-action="prev" disabled>‹ Prev</button>
+                <span class="dash-page-info" id="visits-page-info">—</span>
+                <button class="btn btn-outline" data-action="next" disabled>Next ›</button>
+            </nav>
+        </section>
+
+        <!-- ── Requests ──────────────────────────────── -->
+        <section class="dash-section">
+            <div class="dash-section-head">
+                <h2>Service Requests <span class="dash-count" id="requests-count">—</span></h2>
+            </div>
+
+            <div id="requests-status" class="dash-status" hidden></div>
+            <div id="requests-list" class="dash-list"></div>
+
+            <nav class="dash-pagination" data-for="requests">
+                <button class="btn btn-outline" data-action="prev" disabled>‹ Prev</button>
+                <span class="dash-page-info" id="requests-page-info">—</span>
+                <button class="btn btn-outline" data-action="next" disabled>Next ›</button>
+            </nav>
+        </section>
+
+    </main>
+
+    <script src="admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galela Tech – Sign In</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #050510;
+            color: #fff;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            width: 100%; height: 100%;
+            background:
+                radial-gradient(circle at 30% 40%, rgba(43,127,255,0.12) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(20,80,180,0.15) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        :root {
+            --deep-navy:   #0b0b1a;
+            --glow-blue:   #2b7fff;
+            --sky-stroke:  #7bb3ff;
+            --accent-glow: #4d9eff;
+            --text-muted:  #b0c8e5;
+            --card-bg:     rgba(20, 30, 55, 0.8);
+            --error:       #ff5f6d;
+            --success:     #28a745;
+            --online-green: #22c55e;
+        }
+
+        .auth-wrapper {
+            width: 90%;
+            max-width: 460px;
+            z-index: 10;
+            margin: 2rem auto;
+        }
+
+        .auth-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(123,179,255,0.25);
+            border-radius: 48px;
+            padding: 2.8rem 2.2rem;
+            box-shadow: 0 35px 60px -20px rgba(0,0,0,0.7), 0 0 0 1px rgba(43,127,255,0.2) inset;
+            transition: 0.3s;
+        }
+        .auth-card:hover {
+            border-color: var(--glow-blue);
+            box-shadow: 0 35px 60px -15px rgba(43,127,255,0.3);
+        }
+
+        .auth-logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1.8rem;
+        }
+        .auth-logo img {
+            height: 65px;
+            filter: drop-shadow(0 0 12px var(--glow-blue));
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2.2rem;
+        }
+        .auth-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 0%, var(--sky-stroke) 80%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.3rem;
+        }
+        .auth-header p { color: var(--text-muted); font-size: 1rem; }
+
+        /* Connection status indicator */
+        .connection-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            padding: 8px 16px;
+            background: rgba(20, 30, 55, 0.5);
+            border-radius: 40px;
+            border: 1px solid rgba(123,179,255,0.2);
+        }
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--online-green);
+            box-shadow: 0 0 10px var(--online-green);
+            animation: pulse 2s infinite;
+        }
+        .status-dot.offline {
+            background: var(--error);
+            box-shadow: 0 0 10px var(--error);
+            animation: none;
+        }
+        .status-dot.checking {
+            background: #f59e0b;
+            box-shadow: 0 0 10px #f59e0b;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .status-text {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* ── ALERTS ── */
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;          /* hidden by default */
+            align-items: center;
+            gap: 12px;
+            font-size: 0.95rem;
+        }
+        .alert i { font-size: 1.2rem; }
+        .alert-success {
+            background: rgba(40,167,69,0.1);
+            border: 1px solid rgba(40,167,69,0.3);
+            color: #5cb85c;
+        }
+        .alert-error {
+            background: rgba(255,95,109,0.1);
+            border: 1px solid rgba(255,95,109,0.3);
+            color: var(--error);
+        }
+
+        /* ── FORM ── */
+        .form-group { margin-bottom: 1.4rem; }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #cad7f0;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            background: rgba(10,20,40,0.7);
+            border: 1px solid #2a4070;
+            border-radius: 40px;
+            padding: 0.1rem 1.2rem;
+            transition: 0.2s;
+            position: relative;
+        }
+        .input-wrapper:hover,
+        .input-wrapper:focus-within {
+            border-color: var(--glow-blue);
+            box-shadow: 0 0 0 3px rgba(43,127,255,0.2);
+        }
+        .input-wrapper > i {
+            color: var(--glow-blue);
+            font-size: 1.1rem;
+            margin-right: 0.8rem;
+            opacity: 0.85;
+            flex-shrink: 0;
+        }
+        .input-wrapper input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            padding: 1rem 0;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+        }
+        .input-wrapper input::placeholder { color: #5f7faf; }
+
+        .password-toggle {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0 4px;
+            flex-shrink: 0;
+            transition: color 0.2s;
+        }
+        .password-toggle:hover { color: var(--glow-blue); }
+
+        /* ── EXTRAS ── */
+        .form-extras {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 1.2rem 0 1.8rem;
+            font-size: 0.9rem;
+        }
+        .remember {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+        .remember input[type="checkbox"] {
+            accent-color: var(--glow-blue);
+            width: 16px; height: 16px;
+            cursor: pointer;
+        }
+        .forgot-link {
+            color: var(--sky-stroke);
+            text-decoration: none;
+            transition: 0.2s;
+            border-bottom: 1px dashed transparent;
+        }
+        .forgot-link:hover { color: white; border-bottom-color: var(--glow-blue); }
+
+        /* ── BUTTON ── */
+        .auth-btn {
+            width: 100%;
+            background: linear-gradient(145deg, var(--glow-blue), #1755cc);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+            padding: 1.1rem;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: 0.25s;
+            box-shadow: 0 10px 25px rgba(43,127,255,0.4);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-family: 'Inter', sans-serif;
+        }
+        .auth-btn:hover:not(:disabled) {
+            transform: scale(1.02);
+            background: linear-gradient(145deg, #3d8cff, #1f4fcc);
+            box-shadow: 0 18px 35px rgba(43,127,255,0.6);
+        }
+        .auth-btn:disabled {
+            opacity: 0.75;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ── SPINNER inside button ── */
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .fa-spin { animation: spin 0.8s linear infinite; }
+
+        /* ── DIVIDER ── */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: #4f6f9f;
+            font-size: 0.9rem;
+            margin-bottom: 1.6rem;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #2b7fff, transparent);
+        }
+
+        /* ── SOCIAL ── */
+        .social-login {
+            display: flex;
+            justify-content: center;
+            gap: 1.8rem;
+            margin-bottom: 2rem;
+        }
+        .social-icon {
+            color: #b0c8e5;
+            font-size: 1.8rem;
+            transition: 0.2s;
+            text-decoration: none;
+        }
+        .social-icon:hover { color: var(--glow-blue); transform: translateY(-3px); }
+
+        .signup-prompt { text-align: center; color: var(--text-muted); }
+        .signup-prompt a {
+            color: white; font-weight: 600; text-decoration: none;
+            border-bottom: 1px solid var(--glow-blue); padding-bottom: 2px;
+        }
+        .signup-prompt a:hover { color: var(--sky-stroke); }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 1.6rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: 0.2s;
+        }
+        .back-link i { margin-right: 6px; color: var(--glow-blue); }
+        .back-link:hover { color: white; }
+
+        @media (max-width: 480px) {
+            .auth-card { padding: 2rem 1.2rem; border-radius: 28px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-wrapper">
+        <div class="auth-card">
+
+            <!-- Logo -->
+            <div class="auth-logo">
+                <img src="https://i.postimg.cc/5y68Fqyv/Chat-GPT-Image-Mar-6-2026-10-08-30-PM.png" alt="Galela Tech">
+            </div>
+
+            <!-- Heading -->
+            <div class="auth-header">
+                <h2>Welcome Back</h2>
+                <p>Sign in to your enterprise portal</p>
+            </div>
+
+            <!-- Connection Status Indicator -->
+            <div class="connection-status" id="connectionStatus">
+                <div class="status-dot" id="statusDot"></div>
+                <span class="status-text" id="statusText">Checking server connection...</span>
+            </div>
+
+            <!-- Alerts -->
+            <div class="alert alert-error" id="errorAlert">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="errorMessage">An error occurred.</span>
+            </div>
+            <div class="alert alert-success" id="successAlert">
+                <i class="fas fa-check-circle"></i>
+                <span id="successMessage">Success!</span>
+            </div>
+
+            <!-- Login form -->
+            <form id="loginForm" novalidate>
+                <div class="form-group">
+                    <label for="username">Username or Email</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="username" placeholder="Enter your username or email" autocomplete="username" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" required>
+                        <button type="button" class="password-toggle" id="togglePassword" aria-label="Toggle password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-extras">
+                    <label class="remember">
+                        <input type="checkbox" id="rememberMe"> Remember me
+                    </label>
+                    <a href="forgot-password.html" class="forgot-link" id="forgotPassword">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="auth-btn" id="loginButton">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>Sign In</span>
+                </button>
+            </form>
+
+            <div class="divider">or continue with</div>
+
+            <div class="social-login">
+                <a href="#" class="social-icon" title="Google"><i class="fab fa-google"></i></a>
+                <a href="#" class="social-icon" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" class="social-icon" title="Microsoft"><i class="fab fa-microsoft"></i></a>
+                <a href="#" class="social-icon" title="GitHub"><i class="fab fa-github"></i></a>
+            </div>
+
+            <div class="signup-prompt">
+                Don't have an account? <a href="register.html">Create account</a>
+            </div>
+
+            <div style="text-align:center;">
+                <a href="/index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
+            </div>
+
+        </div><!-- /.auth-card -->
+    </div><!-- /.auth-wrapper -->
+
+    <script>
+        // ============================================
+        // GALELA TECH - AUTHENTICATION SYSTEM
+        // UPDATED FOR LOCAL BACKEND
+        // ============================================
+    
+        // DOM Elements
+        const loginForm = document.getElementById('loginForm');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const togglePasswordBtn = document.getElementById('togglePassword');
+        const loginButton = document.getElementById('loginButton');
+        const rememberMe = document.getElementById('rememberMe');
+        const errorAlert = document.getElementById('errorAlert');
+        const errorMessage = document.getElementById('errorMessage');
+        const successAlert = document.getElementById('successAlert');
+        const successMessage = document.getElementById('successMessage');
+        const forgotPasswordLink = document.getElementById('forgotPassword');
+        const statusDot = document.getElementById('statusDot');
+        const statusText = document.getElementById('statusText');
+    
+        // ============================================
+        // CONFIGURATION — auto-switches local ↔ live
+        // ============================================
+        const APP_CONFIG = {
+            API_BASE_URL: 'https://cv-software-backend.onrender.com',
+            
+            API_ENDPOINTS: {
+                login: '/api/auth/login/',
+                register: '/api/auth/register/',
+                logout: '/api/auth/logout/',
+                refresh: '/api/token/refresh/',
+                user: '/api/auth/user/',
+                health: '/api/health/'
+            },
+            
+            TOKEN_TYPES: {
+                ACCESS: 'access_token',
+                REFRESH: 'refresh_token'
+            },
+            
+            TIMEOUTS: {
+                API_REQUEST: 30000,
+                REDIRECT_DELAY: 1500,
+                ALERT_DISPLAY: 5000,
+                CONNECTION_CHECK: 30000 // Check connection every 30 seconds
+            },
+            
+            // Dashboard URLs by role
+            getDashboardUrl: function(role) {
+                const roleLower = (role || '').toLowerCase();
+                const dashboards = {
+                    'customer': 'customer_dashboard.html',
+                    'driver': 'driver_dashboard.html',
+                    'admin': 'admin_dashboard.html',
+                    'super_admin': 'admin_dashboard.html',
+                    'user': 'customer_dashboard.html'
+                };
+                return dashboards[roleLower] || 'customer_dashboard.html';
+            }
+        };
+    
+        // ============================================
+        // CONNECTION STATUS CHECK
+        // ============================================
+        let connectionCheckInterval = null;
+        
+        async function checkServerConnection() {
+            statusDot.className = 'status-dot checking';
+            statusText.textContent = 'Checking server connection...';
+            
+            try {
+                // Try health check endpoint
+                const response = await fetch(APP_CONFIG.API_BASE_URL + APP_CONFIG.API_ENDPOINTS.health, {
+                    method: 'GET',
+                    mode: 'cors',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                if (response.ok) {
+                    statusDot.className = 'status-dot';
+                    statusText.textContent = 'Connected to server';
+                    return true;
+                } else {
+                    throw new Error('Server not responding');
+                }
+            } catch (error) {
+                console.warn('Server connection failed:', error);
+                statusDot.className = 'status-dot offline';
+                statusText.textContent = 'Server offline - Using local mode';
+                return false;
+            }
+        }
+        
+        function startConnectionMonitoring() {
+            checkServerConnection();
+            connectionCheckInterval = setInterval(checkServerConnection, APP_CONFIG.TIMEOUTS.CONNECTION_CHECK);
+        }
+        
+        function stopConnectionMonitoring() {
+            if (connectionCheckInterval) {
+                clearInterval(connectionCheckInterval);
+            }
+        }
+    
+        // ============================================
+        // AUTH SERVICE
+        // ============================================
+        const AuthService = {
+            currentUser: null,
+            
+            init: function() { 
+                this.checkAuthState(); 
+                startConnectionMonitoring();
+            },
+            
+            isAuthenticated: function() { return !!this.getToken(); },
+            
+            getToken: function() { return localStorage.getItem(APP_CONFIG.TOKEN_TYPES.ACCESS); },
+            
+            getRefreshToken: function() { return localStorage.getItem(APP_CONFIG.TOKEN_TYPES.REFRESH); },
+            
+            getUser: function() {
+                if (this.currentUser) return this.currentUser;
+                const userStr = localStorage.getItem('user_info');
+                if (userStr) {
+                    try { this.currentUser = JSON.parse(userStr); } catch (e) { return null; }
+                }
+                return this.currentUser;
+            },
+            
+            setTokens: function(accessToken, refreshToken = '') {
+                if (accessToken) localStorage.setItem(APP_CONFIG.TOKEN_TYPES.ACCESS, accessToken);
+                if (refreshToken) localStorage.setItem(APP_CONFIG.TOKEN_TYPES.REFRESH, refreshToken);
+            },
+            
+            setUser: function(userData) {
+                this.currentUser = userData;
+                localStorage.setItem('user_info', JSON.stringify(userData));
+                localStorage.setItem('current_user', JSON.stringify({
+                    username: userData.username || userData.email || 'user',
+                    role: userData.role || 'customer',
+                    token: this.getToken()
+                }));
+            },
+            
+            logout: function() {
+                localStorage.removeItem(APP_CONFIG.TOKEN_TYPES.ACCESS);
+                localStorage.removeItem(APP_CONFIG.TOKEN_TYPES.REFRESH);
+                localStorage.removeItem('user_info');
+                localStorage.removeItem('current_user');
+                localStorage.removeItem('rememberedUsername');
+                this.currentUser = null;
+            },
+            
+            checkAuthState: function() { 
+                if (this.getToken()) {
+                    this.getUser();
+                    // Optionally verify token with server
+                    this.verifyToken();
+                }
+            },
+            
+            verifyToken: async function() {
+                const token = this.getToken();
+                if (!token) return false;
+                
+                try {
+                    const response = await fetch(APP_CONFIG.API_BASE_URL + APP_CONFIG.API_ENDPOINTS.user, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        const userData = await response.json();
+                        this.setUser(userData);
+                        return true;
+                    } else {
+                        // Token invalid
+                        this.logout();
+                        return false;
+                    }
+                } catch (error) {
+                    console.warn('Token verification failed - network error');
+                    return false;
+                }
+            }
+        };
+    
+        // ============================================
+        // UI HELPERS
+        // ============================================
+        if (togglePasswordBtn) {
+            togglePasswordBtn.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                const icon = this.querySelector('i');
+                icon.classList.toggle('fa-eye');
+                icon.classList.toggle('fa-eye-slash');
+            });
+        }
+    
+        function showAlert(alertElement, message, isError = true) {
+            if (isError) {
+                errorMessage.textContent = message;
+                errorAlert.style.display = 'flex';
+                successAlert.style.display = 'none';
+            } else {
+                successMessage.textContent = message;
+                successAlert.style.display = 'flex';
+                errorAlert.style.display = 'none';
+            }
+            setTimeout(() => { alertElement.style.display = 'none'; }, APP_CONFIG.TIMEOUTS.ALERT_DISPLAY);
+        }
+    
+        // On load: check saved credentials and already logged in
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedUsername = localStorage.getItem('rememberedUsername');
+            if (savedUsername) {
+                usernameInput.value = savedUsername;
+                rememberMe.checked = true;
+            }
+    
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('registered') === 'true') {
+                showAlert(successAlert, "Registration successful! Please login.", false);
+                history.replaceState(null, '', window.location.pathname);
+            }
+    
+            // Check if already logged in
+            if (AuthService.isAuthenticated()) {
+                const user = AuthService.getUser();
+                if (user) {
+                    // Verify token before redirect
+                    AuthService.verifyToken().then(valid => {
+                        if (valid) {
+                            window.location.href = APP_CONFIG.getDashboardUrl(user.role);
+                        }
+                    });
+                }
+            }
+            
+            // Start connection monitoring
+            startConnectionMonitoring();
+        });
+    
+        // Clean up on page unload
+        window.addEventListener('beforeunload', function() {
+            stopConnectionMonitoring();
+        });
+    
+        // ============================================
+        // LOGIN FORM SUBMISSION
+        // ============================================
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+    
+            const identifier = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+    
+            if (!identifier || !password) {
+                showAlert(errorAlert, "Please fill in all fields.");
+                return;
+            }
+    
+            // Show loading state
+            loginButton.classList.add('loading');
+            loginButton.disabled = true;
+            loginButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
+    
+            try {
+                // Check if server is reachable first
+                const isServerOnline = await checkServerConnection();
+                
+                if (!isServerOnline) {
+                    // Offline mode - check against localStorage (demo purposes)
+                    const storedUsers = JSON.parse(localStorage.getItem('registered_users') || '[]');
+                    const user = storedUsers.find(u => 
+                        (u.username === identifier || u.email === identifier) && u.password === password
+                    );
+                    
+                    if (user) {
+                        // Demo login successful
+                        if (rememberMe.checked) {
+                            localStorage.setItem('rememberedUsername', identifier);
+                        } else {
+                            localStorage.removeItem('rememberedUsername');
+                        }
+                        
+                        // Create demo user data
+                        const userInfo = {
+                            id: user.id || 1,
+                            username: user.username,
+                            email: user.email,
+                            role: user.role || 'customer',
+                            full_name: user.full_name || user.username
+                        };
+                        
+                        // Create demo token
+                        const demoToken = 'demo_token_' + Date.now();
+                        AuthService.setTokens(demoToken, demoToken);
+                        AuthService.setUser(userInfo);
+                        
+                        showAlert(successAlert, `Welcome back! Redirecting to dashboard...`, false);
+                        
+                        setTimeout(() => {
+                            const dashboardUrl = APP_CONFIG.getDashboardUrl(userInfo.role);
+                            window.location.href = dashboardUrl;
+                        }, APP_CONFIG.TIMEOUTS.REDIRECT_DELAY);
+                    } else {
+                        showAlert(errorAlert, "Invalid credentials. Server is offline and no local user found.");
+                    }
+                    
+                    loginButton.classList.remove('loading');
+                    loginButton.disabled = false;
+                    loginButton.innerHTML = '<i class="fas fa-sign-in-alt"></i><span>Sign In</span>';
+                    return;
+                }
+    
+                // Online mode - send to real backend
+                const requestBody = { 
+                    username: identifier,
+                    password: password 
+                };
+    
+                console.log('Sending login request to:', APP_CONFIG.API_BASE_URL + APP_CONFIG.API_ENDPOINTS.login);
+    
+                const response = await fetch(APP_CONFIG.API_BASE_URL + APP_CONFIG.API_ENDPOINTS.login, {
+                    method: "POST",
+                    mode: "cors",
+                    headers: { 
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+    
+                console.log('Login Response Status:', response.status);
+    
+                let data;
+                try { 
+                    data = await response.json(); 
+                } catch (jsonError) {
+                    console.error('JSON Parse Error:', jsonError);
+                    showAlert(errorAlert, "Server response error. Please try again.");
+                    return;
+                }
+    
+                if (response.ok && response.status === 200) {
+                    // ✅ LOGIN SUCCESSFUL
+    
+                    if (rememberMe.checked) {
+                        localStorage.setItem('rememberedUsername', identifier);
+                    } else {
+                        localStorage.removeItem('rememberedUsername');
+                    }
+    
+                    // Save tokens - handle different response formats
+                    if (data.access) {
+                        AuthService.setTokens(data.access, data.refresh || '');
+                    } else if (data.access_token) {
+                        AuthService.setTokens(data.access_token, data.refresh_token || '');
+                    } else if (data.token) {
+                        AuthService.setTokens(data.token);
+                    }
+                    
+                    // Determine role and user info from response
+                    let userRole = 'customer';
+                    let userInfo = {};
+                    
+                    if (data.user) {
+                        // Response has user object
+                        userInfo = {
+                            id: data.user.id || '',
+                            username: data.user.username || identifier.split('@')[0],
+                            email: data.user.email || (identifier.includes('@') ? identifier : ''),
+                            role: data.user.role || 'customer',
+                            full_name: data.user.full_name || data.user.username || ''
+                        };
+                        userRole = data.user.role || 'customer';
+                    } else {
+                        // Response might have role directly
+                        userRole = data.role || 'customer';
+                        userInfo = {
+                            id: data.id || data.user_id || '',
+                            username: data.username || identifier.split('@')[0],
+                            email: data.email || (identifier.includes('@') ? identifier : ''),
+                            role: userRole,
+                            full_name: data.full_name || data.name || ''
+                        };
+                    }
+                    
+                    AuthService.setUser(userInfo);
+    
+                    showAlert(successAlert, `Welcome back! Redirecting to dashboard...`, false);
+    
+                    setTimeout(() => {
+                        const dashboardUrl = APP_CONFIG.getDashboardUrl(userRole);
+                        window.location.href = dashboardUrl;
+                    }, APP_CONFIG.TIMEOUTS.REDIRECT_DELAY);
+    
+                } else {
+                    // ❌ LOGIN FAILED
+                    let errorMsg = "Login failed. ";
+                    if (data.detail) errorMsg += data.detail;
+                    else if (data.error) errorMsg += data.error;
+                    else if (data.non_field_errors) errorMsg += data.non_field_errors[0];
+                    else if (data.message) errorMsg += data.message;
+                    else if (response.status === 401) errorMsg += "Invalid username or password.";
+                    else if (response.status === 400) errorMsg += "Bad request. Check your input.";
+                    else errorMsg += "Please check your credentials and try again.";
+                    
+                    showAlert(errorAlert, errorMsg);
+                }
+            } catch (error) {
+                console.error("Network error:", error);
+                showAlert(errorAlert, "Network error. Please check your connection and try again.");
+            } finally {
+                loginButton.classList.remove('loading');
+                loginButton.disabled = false;
+                loginButton.innerHTML = '<i class="fas fa-sign-in-alt"></i><span>Sign In</span>';
+            }
+        });
+    
+        // Clear errors on typing
+        usernameInput.addEventListener('input', () => errorAlert.style.display = 'none');
+        passwordInput.addEventListener('input', () => errorAlert.style.display = 'none');
+    
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !loginButton.disabled) loginForm.requestSubmit();
+            if (e.key === 'Escape') { 
+                usernameInput.value = ''; 
+                passwordInput.value = ''; 
+                usernameInput.focus(); 
+            }
+        });
+    
+        // Forgot password
+        if (forgotPasswordLink) {
+            forgotPasswordLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                const identifier = usernameInput.value.trim();
+                // Check server connection
+                checkServerConnection().then(isOnline => {
+                    if (isOnline) {
+                        if (identifier) {
+                            window.location.href = `forgot-password.html?email=${encodeURIComponent(identifier)}`;
+                        } else {
+                            window.location.href = "forgot-password.html";
+                        }
+                    } else {
+                        alert('Server is offline. Please try again when connected.');
+                    }
+                });
+            });
+        }
+    
+        // Initialize auth service
+        AuthService.init();
+        usernameInput.focus();
+    </script>
+</body>
+</html>
