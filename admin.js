@@ -1,5 +1,5 @@
 /* ──────────────────────────────────────────────────────────
-   Galela Dashboard — admin.js
+   Galela Dashboard — admin.js (Secure Token Version)
    ────────────────────────────────────────────────────────── */
 
 (function () {
@@ -7,29 +7,42 @@
 
     // ── Config ─────────────────────────────────────────────
     const API_BASE = 'https://galela-solution-backend.onrender.com/api/dashboard';
-    
-    // 1. Secure Key Prompt
-    let KEY = sessionStorage.getItem('gs_galela_admin_key');
-    
-    if (!KEY) {
-        KEY = prompt("🔒 Enter Galela Admin Password:");
-        
-        if (!KEY) {
-            document.body.innerHTML = `
-                <div style="text-align:center; margin-top: 100px; font-family: sans-serif;">
-                    <h2 style="color: #b71c1c;">Access Denied</h2>
-                    <p>You must enter the admin password to view this page.</p>
-                    <button onclick="window.location.reload()" style="padding: 10px 20px; cursor: pointer;">Try Again</button>
-                </div>
-            `;
-            return; 
+
+    // ── Authentication ─────────────────────────────────────
+    let TOKEN = localStorage.getItem('gs_galela_token');
+
+    async function login() {
+        let password = prompt("🔒 Enter Galela Admin Password:");
+        if (!password) return false;
+
+        try {
+            const res = await fetch(`${API_BASE}/login/`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password: password })
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                TOKEN = data.token;
+                localStorage.setItem('gs_galela_token', TOKEN);
+                return true;
+            } else {
+                alert("Invalid password.");
+                return false;
+            }
+        } catch (err) {
+            alert("Login failed. Please check your connection.");
+            return false;
         }
-        
-        sessionStorage.setItem('gs_galela_admin_key', KEY);
     }
 
-    // 2. Encode the key
-    const ENCODED_KEY = encodeURIComponent(KEY);
+    // Helper to attach the Bearer token to every request
+    async function apiFetch(url, options = {}) {
+        if (!options.headers) options.headers = {};
+        options.headers['Authorization'] = `Bearer ${TOKEN}`;
+        return fetch(url, options);
+    }
 
     // ── State ──────────────────────────────────────────────
     const state = {
@@ -81,14 +94,17 @@
 
     // ── Fetch ──────────────────────────────────────────────
     const buildUrl = (endpoint, page) => {
-        const params = new URLSearchParams({ key: KEY, page: String(page) });
+        const params = new URLSearchParams({ page: String(page) });
         return `${API_BASE}/${endpoint}/?${params.toString()}`;
     };
 
     const fetchData = async (endpoint, page) => {
-        const res = await fetch(buildUrl(endpoint, page));
-        if (res.status === 403) {
-            throw new Error('Invalid API key');
+        const res = await apiFetch(buildUrl(endpoint, page));
+        
+        if (res.status === 401 || res.status === 403) {
+            localStorage.removeItem('gs_galela_token');
+            window.location.reload();
+            return;
         }
         if (!res.ok) {
             throw new Error(`HTTP ${res.status}`);
@@ -168,7 +184,7 @@
              const filesHtml = (r.files && r.files.length)
                 ? `<ul class="dash-files">${r.files.map(f => `
                         <li>
-                            <a href="${API_BASE}/files/${f.id}/?key=${ENCODED_KEY}" target="_blank" class="file-name file-link">
+                            <a href="#" onclick="downloadFile(event, ${f.id})" class="file-name file-link">
                                 📄 ${escapeHtml(f.file_name)}
                             </a>
                             <span class="file-size">${fmtBytes(f.size)}</span>
@@ -283,11 +299,7 @@
         load('requests', 1);
     });
 
-    // ── Initial load ───────────────────────────────────────
-    load('visits',   1);
-    load('requests', 1);
-
-     // ── Delete handling (Event Delegation) ─────────────────
+    // ── Delete handling ────────────────────────────────────
     document.body.addEventListener('click', async (e) => {
         // Delete Visit
         const visitBtn = e.target.closest('[data-delete-visit]');
@@ -318,18 +330,16 @@
         btnElement.textContent = 'Deleting…';
 
         try {
-            const res = await fetch(`${API_BASE}/${endpoint}/${id}/?key=${ENCODED_KEY}`, {
+            const res = await apiFetch(`${API_BASE}/${endpoint}/${id}/`, {
                 method: 'DELETE',
             });
 
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-            // Remove the row from the DOM instantly
             const row = btnElement.closest('.dash-row');
             row.style.opacity = '0';
             setTimeout(() => row.remove(), 200);
 
-            // Reload data to update counts and pagination
             load(endpoint, state[endpoint].page);
 
         } catch (err) {
@@ -338,4 +348,41 @@
             btnElement.textContent = originalText;
         }
     }
+
+    // ── File Download (Secure) ─────────────────────────────
+    window.downloadFile = async function(event, fileId) {
+        event.preventDefault();
+        try {
+            const res = await apiFetch(`${API_BASE}/files/${fileId}/`);
+            if (!res.ok) throw new Error("Download failed");
+            
+            const blob = await res.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = "download"; 
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+        } catch (err) {
+            alert("Could not download file.");
+        }
+    };
+
+    // ── Init ───────────────────────────────────────────────
+    async function init() {
+        if (!TOKEN) {
+            const success = await login();
+            if (!success) {
+                document.body.innerHTML = "<h2 style='text-align:center; margin-top:50px;'>Access Denied.</h2>";
+                return;
+            }
+        }
+        load('visits',   1);
+        load('requests', 1);
+    }
+
+    init();
+
 })();
