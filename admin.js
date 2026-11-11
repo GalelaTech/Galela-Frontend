@@ -1,5 +1,5 @@
 /* ──────────────────────────────────────────────────────────
-   Galela Dashboard — admin.js (Secure Token Version)
+   Galela Dashboard — admin.js (Secure Token + Country Filter)
    ────────────────────────────────────────────────────────── */
 
 (function () {
@@ -46,7 +46,7 @@
 
     // ── State ──────────────────────────────────────────────
     const state = {
-        visits:   { page: 1, next: null, prev: null, count: 0 },
+        visits:   { page: 1, next: null, prev: null, count: 0, rawResults: [], filter: 'all' },
         requests: { page: 1, next: null, prev: null, count: 0 },
     };
 
@@ -112,7 +112,7 @@
         return res.json();
     };
 
-    // ── Render: Visits ─────────────────────────────────────
+     // ── Render: Visits (Grouped by IP) ─────────────────────
     const renderVisits = (results) => {
         const list = $('#visits-list');
         list.innerHTML = '';
@@ -122,36 +122,66 @@
             return;
         }
 
-        for (const v of results) {
+        // 1. Group the visits by IP address
+        const grouped = {};
+        results.forEach(v => {
+            const ip = v.ip || 'Unknown IP';
+            if (!grouped[ip]) grouped[ip] = [];
+            grouped[ip].push(v);
+        });
+
+        // 2. Render each grouped IP
+        for (const [ip, visits] of Object.entries(grouped)) {
+            const count = visits.length;
+            const latestVisit = visits[0]; // Assuming API returns newest first
+            const country = latestVisit.country || 'Unknown';
+            
+            // Build the summary row (The "Tap")
             const summary = `
-                <span class="row-id">#${v.id}</span>
-                <span class="row-meta">${escapeHtml(v.ip || '—')}</span>
-                <span class="row-path">${escapeHtml(v.path || '—')}</span>
-                <span class="row-country">${escapeHtml(v.country || '')}</span>
-                <span class="row-time">${fmtDate(v.created_at)}</span>
+                <span class="row-id">${escapeHtml(ip)}${count > 1 ? ` (${count})` : ''}</span>
+                <span class="row-meta">${escapeHtml(country)}</span>
+                <span class="row-path">Last visit: ${fmtDate(latestVisit.created_at)}</span>
             `;
 
+            // Build the inner detail (List of all visits from this IP)
+            let allVisitsHtml = '';
+            visits.forEach((v, index) => {
+                // Only show the full detail for the first one, and a simpler list for the rest
+                if (index === 0) {
+                    allVisitsHtml += `
+                        <div style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px dashed #ccc;">
+                            <h4 style="margin: 0 0 0.5rem 0; color: #666;">Most Recent Visit</h4>
+                            <dl class="dash-dl">
+                                ${detailRow('ID',         v.id)}
+                                ${detailRow('Path',       v.path)}
+                                ${detailRow('Referrer',   v.referrer)}
+                                ${detailRow('User agent', v.user_agent)}
+                                ${detailRow('Continent',  v.continent)}
+                                ${detailRow('ASN',        v.asn)}
+                                ${detailRow('Received',   fmtDate(v.created_at))}
+                            </dl>
+                        </div>
+                    `;
+                } else {
+                    allVisitsHtml += `
+                        <div style="font-size: 0.85rem; color: #555; padding: 0.25rem 0;">
+                            • ${fmtDate(v.created_at)} — Visited <strong>${escapeHtml(v.path || '/')}</strong>
+                        </div>
+                    `;
+                }
+            });
+
             const detail = `
-                <dl class="dash-dl">
-                    ${detailRow('ID',         v.id)}
-                    ${detailRow('IP',         v.ip)}
-                    ${detailRow('Session',    v.session_id)}
-                    ${detailRow('Path',       v.path)}
-                    ${detailRow('Referrer',   v.referrer)}
-                    ${detailRow('User agent', v.user_agent)}
-                    ${detailRow('Country',    v.country)}
-                    ${detailRow('Country code', v.country_code)}
-                    ${detailRow('Continent',  v.continent)}
-                    ${detailRow('ASN',        v.asn)}
-                    ${detailRow('AS name',    v.as_name)}
-                    ${detailRow('AS domain',  v.as_domain)}
-                    ${detailRow('Received',   fmtDate(v.created_at))}
-                    ${detailRow('Visit date', v.visit_date)}
-                </dl>
-                <div class="dash-row-actions">
-                    <button type="button" class="btn btn-danger btn-sm" data-delete-visit="${v.id}">
-                        Delete Visit
-                    </button>
+                <div style="padding: 0.5rem 0;">
+                    <h4 style="margin: 0 0 0.5rem 0; color: #333;">All Visits from ${escapeHtml(ip)}</h4>
+                    ${allVisitsHtml}
+                </div>
+                <div class="dash-row-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem;">
+                    ${visits.map(v => `
+                        <button type="button" class="btn btn-danger btn-sm" data-delete-visit="${v.id}">
+                            Delete Visit #${v.id}
+                        </button>
+                    `).join('')}
                 </div>
             `;
 
@@ -241,12 +271,61 @@
         const nextBtn = nav.querySelector('[data-action="next"]');
         const pageInfo = nav.querySelector('.dash-page-info');
 
-        prevBtn.disabled = !info.prev;
+        prevBtn.disabled = !info.previous;
         nextBtn.disabled = !info.next;
 
         const totalPages = Math.ceil(info.count / 20) || 1;
         pageInfo.textContent = `Page ${state[endpoint].page} of ${totalPages}`;
     };
+
+    // ── Country Filter Logic ───────────────────────────────
+    
+    const populateCountryFilter = (visits) => {
+        const filterEl = $('#country-filter');
+        if (!filterEl) return;
+        
+        // Remember current selection to keep it after refresh
+        const currentSelection = state.visits.filter;
+
+        // Get unique countries
+        const countries = [...new Set(visits.map(v => v.country).filter(Boolean))].sort();
+        
+        // Build options
+        let optionsHtml = '<option value="all">All Countries</option>';
+        countries.forEach(c => {
+            optionsHtml += `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`;
+        });
+        
+        filterEl.innerHTML = optionsHtml;
+
+        // Restore selection if it still exists in the new list, otherwise default to 'all'
+        if (countries.includes(currentSelection)) {
+            filterEl.value = currentSelection;
+        } else {
+            filterEl.value = 'all';
+            state.visits.filter = 'all';
+        }
+    };
+
+    const applyCountryFilter = () => {
+        const filterVal = state.visits.filter;
+        let filteredResults = state.visits.rawResults;
+
+        if (filterVal !== 'all') {
+            filteredResults = filteredResults.filter(v => v.country === filterVal);
+        }
+
+        renderVisits(filteredResults);
+    };
+
+    // Listen for dropdown changes
+    document.addEventListener('change', (e) => {
+        if (e.target && e.target.id === 'country-filter') {
+            state.visits.filter = e.target.value;
+            applyCountryFilter();
+        }
+    });
+
 
     // ── Load an endpoint ───────────────────────────────────
     const load = async (endpoint, page) => {
@@ -268,7 +347,15 @@
             countEl.textContent = `(${data.count})`;
 
             if (endpoint === 'visits') {
-                renderVisits(data.results);
+                // Store raw data for filtering
+                state[endpoint].rawResults = data.results;
+                
+                // Update dropdown with available countries
+                populateCountryFilter(data.results);
+                
+                // Render (which applies the active filter)
+                applyCountryFilter();
+                
             } else {
                 renderRequests(data.results);
             }
@@ -295,6 +382,8 @@
 
     // ── Refresh button ─────────────────────────────────────
     $('#refresh-btn').addEventListener('click', () => {
+        // Reset filter on hard refresh
+        state.visits.filter = 'all'; 
         load('visits',   1);
         load('requests', 1);
     });

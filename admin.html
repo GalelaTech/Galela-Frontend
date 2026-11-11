@@ -27,12 +27,20 @@
         </div>
     </header>
 
-    <main class="dash-container">
+        <main class="dash-container">
 
         <!-- ── Visits ────────────────────────────────── -->
         <section class="dash-section">
-            <div class="dash-section-head">
-                <h2>Visits <span class="dash-count" id="visits-count">—</span></h2>
+            <!-- Fixed the missing '<' and removed the extra </div> -->
+            <div class="dash-section-head" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                <h2 style="margin: 0;">Visits <span class="dash-count" id="visits-count">—</span></h2>
+                
+                <div class="dash-filter">
+                    <label for="country-filter" class="sr-only">Filter by Country</label>
+                    <select id="country-filter" class="form-control" style="padding: 0.5rem 1rem; border: 1.5px solid var(--line, #ccc); border-radius: 6px; font-family: inherit; background: #fff; color: var(--ink, #333); cursor: pointer;">
+                        <option value="all">All Countries</option>
+                    </select>
+                </div>
             </div>
 
             <div id="visits-status" class="dash-status" hidden></div>
